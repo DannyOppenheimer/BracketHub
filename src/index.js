@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 
@@ -10,6 +10,9 @@ import {
   JoinBracketGroup,
   MyBracketGroups,
   Explore,
+  Account,
+  Signin,
+  Signup
 } from "./components";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,6 +25,9 @@ root.render(
       <Route path="/join-bracket" element={<JoinBracketGroup />} />
       <Route path="/bracket-groups" element={<MyBracketGroups />} />
       <Route path="/explore" element={<Explore />} />
+      <Route path="/Account" element={<Account />} />
+      <Route path="/Signin" element={<Signin />} />
+      <Route path="/Signup" element={<Signup />} />
     </Routes>
   </Router>
 );

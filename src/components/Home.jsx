@@ -1,9 +1,20 @@
 import React from 'react'
+import styles from "./Home.module.css";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
+    const description = "Make brackets for your backyard basketball tournament, online 1v1, or unique professional sport\nCreate groups and add your friends, or explore public brackets"
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.title}>Bracket Hub</h1>
+            <p className={styles.description}>{description}</p>
+            <div className={styles.authentication_container}>
+                <NavLink className={styles.sign_up_button} to="/signin">Sign In</NavLink>
+                <NavLink className={styles.sign_up_button} to="/signup">Sign up</NavLink>
+            </div>
+            
+        </div>
+    )
 }
 
 export default Home

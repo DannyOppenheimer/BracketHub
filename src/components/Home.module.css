@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;500;900&display=swap');
+.title {
+    margin-top: 4vh;
+    margin-left: -20px;
+    text-align: center;
+    font-weight: 900;
+    font-family: 'Raleway', sans-serif;
+}
+
+.description {
+    padding-top: 3vh;
+    text-align: center;
+
+    white-space: pre;
+    font-family: 'Raleway', sans-serif;
+}
+
+.authentication_container {
+    text-align: center;
+    
+}
+
+.sign_up_button {
+
+    color: black;
+
+    margin-right: 1vw;
+
+    padding-right: 2.5vw;
+    padding-left: 2.5vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+
+    font-family: 'Raleway', sans-serif;
+    background-color: #e23cc6;
+    border-style: solid;
+    border-color: black;
+    border-radius: 4px;
+    box-shadow: 3px 3px #888888;
+    
+}
+
+.sign_up_button:hover, .sign_up_button:visited .sign_up_button:active {
+    color: black;
+    text-decoration: none;
+}
