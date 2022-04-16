@@ -39,3 +39,12 @@
 .errors {
     color: red;
 }
+
+.success {
+    color: green;
+}
+
+.already_signed_in {
+    text-align: center;
+    color: green;
+}
