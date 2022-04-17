@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './AuthFields.module.css';
 import PropTypes from 'prop-types';
 import './FirebaseConfig';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithPopup } from 'firebase/auth';
 
 const AuthFields = ({ title, user }) => {
 
@@ -23,19 +23,20 @@ const AuthFields = ({ title, user }) => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     
-    // Firebase auth var
+    // Firebase auth var + google auth var
     const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    auth.useDeviceLanguage();
 
     // Handle authentication for both sign in and sign up
-    const handleAuthentication = () => {
+    const handleAuthentication = (command) => {
         // If currently on sign in page
-        if(title === 'Sign In') {
+        if(command === 'Sign In') {
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // user after sign up
                 const user = userCredential.user;
                 setSuccess("Sign in successful");
-                console.log(user.email);
             })
             .catch((error) => {
                 console.log(error.code + '\n' + error.message);
@@ -43,7 +44,7 @@ const AuthFields = ({ title, user }) => {
             });
         } 
         // If currently on sign up page
-        else if(title === 'Sign Up') {
+        else if(command === 'Sign Up') {
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               // Signed in 
@@ -52,11 +53,34 @@ const AuthFields = ({ title, user }) => {
               setSuccess("Sign up successful. Please check your email for verification.");
               // Send an email to the user that verifies its their email
               sendEmailVerification(user);
-              console.log(user.email);
             })
             .catch((error) => {
                 console.log(error.code + '\n' + error.message);
                 setError(errorMessageMap[error.code])
+            });
+        }
+
+        // If clicked on sign in with google
+        else if(command === "Google") {
+            signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+
+                user.displayName = user.email.split('@')[0];
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                // ...
             });
         }
     }
@@ -64,7 +88,7 @@ const AuthFields = ({ title, user }) => {
     return (
         <div className={styles.container}>
             <div className={styles.already_signed_in}>
-                {user !== 'N/A' ? <p>It looks like you're already signed into {user.email}</p> : <></>}
+                {user !== 'N/A' && user !== '' ? <p>It looks like you're already signed into {user.email}</p> : <></>}
             </div>
             <h1 className={styles.title}>{title}</h1>
 
@@ -87,7 +111,12 @@ const AuthFields = ({ title, user }) => {
                 {success}
             </div>
             {/* Submit form, either signs up or signs in based on title of page */}
-            <button onClick={handleAuthentication} className={styles.sub}>Submit</button>
+            <button onClick={() => handleAuthentication(title)} className={styles.sub}>Submit</button>
+
+            <div className={styles.google_sign_up_field} onClick={() => handleAuthentication('Google')}>
+                <img className={styles.google_logo} src='https://upload.wikimedia.org/wikipedia/commons/2/2d/Google-favicon-2015.png' alt='Google Logo'></img>
+                <p className={styles.google_label}>Sign in with google</p>
+            </div>
         </div>
     )
 }

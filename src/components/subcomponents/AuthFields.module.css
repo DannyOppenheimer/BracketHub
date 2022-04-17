@@ -48,3 +48,44 @@
     text-align: center;
     color: green;
 }
+
+.google_sign_up_field {
+    display: flex;
+    flex-direction: wrap;
+    justify-content: center;
+
+    margin-top: 5vh;
+    margin: 5vh auto;
+
+    width: 80%;
+
+    padding-top: 1vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+
+    border-color: #474C5D;
+    border-style: solid;
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.google_sign_up_field:active {
+    box-shadow: 0px 3px 3px #474C5D;
+}
+
+.google_logo {
+    width: 30px;
+    height: 30px;
+
+    user-select: none;    
+}
+
+.google_label {
+    padding-left: 3vh;
+    padding-right: 2vh;
+
+    margin-top: 5px;
+
+    user-select: none;
+}
