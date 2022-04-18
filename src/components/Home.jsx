@@ -24,7 +24,6 @@ const Home = () => {
                 <NavLink className={styles.sign_up_button} to="/signin">Sign In</NavLink>
                 <NavLink className={styles.sign_up_button} to="/signup">Sign up</NavLink>
             </div>
-            <p></p>
         </div>
     )
 }

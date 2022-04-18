@@ -1,0 +1,21 @@
+.button {
+    color: black;
+
+    min-width: 20vw;
+
+    padding-right: 2.5vw;
+    padding-left: 2.5vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+
+    margin-right: 2vw;
+
+    font-family: 'Raleway', sans-serif;
+
+    background-color: #e23cc6;
+
+    border: solid black;
+    box-shadow: 3px 3px #888888;
+
+    border-radius: 4px;
+}

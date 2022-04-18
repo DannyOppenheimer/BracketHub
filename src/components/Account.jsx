@@ -18,7 +18,7 @@ const Account = () => {
 
     return (
         <div>
-            {currentUser !== "N/A" ? 
+            {currentUser !== "N/A" && currentUser !== '' ? 
                 (
                     <>
                         <table>

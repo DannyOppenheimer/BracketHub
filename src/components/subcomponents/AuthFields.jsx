@@ -111,6 +111,7 @@ const AuthFields = ({ title, user }) => {
                 {success}
             </div>
             {/* Submit form, either signs up or signs in based on title of page */}
+            
             <button onClick={() => handleAuthentication(title)} className={styles.sub}>Submit</button>
 
             <div className={styles.google_sign_up_field} onClick={() => handleAuthentication('Google')}>

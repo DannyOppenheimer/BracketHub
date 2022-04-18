@@ -1,6 +1,7 @@
 import React from "react";
 import AuthFields from './subcomponents/AuthFields';
 import './subcomponents/FirebaseConfig';
+import styles from './Signup.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let currentUser = '';
@@ -15,7 +16,7 @@ onAuthStateChanged(auth, (user) => {
 
 const Signup = () => {
   return (
-    <div>
+    <div className={styles.card}>
         <AuthFields title='Sign Up' user={currentUser} />
     </div>
   )

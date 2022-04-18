@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;500;900&display=swap');
 .container {
     margin-left: -12px;
     box-shadow: 3px 3px 2px #888888;
@@ -14,7 +15,6 @@
     padding-bottom: 4vh;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;500&display=swap');
 .header_button {
     color: black;
     font-family: 'Raleway', sans-serif;
