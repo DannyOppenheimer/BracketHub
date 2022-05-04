@@ -1,4 +1,6 @@
 .subtitle {
+    font-weight: 600;
+
     margin-left: -12px;
     text-align: center;
     font-family: 'Raleway', sans-serif;
@@ -9,6 +11,21 @@
     font-family: 'Raleway', sans-serif;
     font-size: 1.5em;
     font-weight: 600;
+}
+
+.error {
+    font-family: 'Raleway', sans-serif;
+    color: red;
+    text-align: center;
+
+    margin-top: 2vh;
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
+
+.icon {
+    width: 25px;
 }
 
 .current_build {
@@ -44,9 +61,11 @@
     margin-top: 5vh;
 
     text-align: center;
+
+    font-family: 'Raleway', sans-serif;
 }
 .container {
-    width: 59%;
+    width: 50%;
     margin: 5vh auto;
 
     padding-top: 2vh;
@@ -75,4 +94,8 @@
     border-color: black;
     border-radius: 4px;
     box-shadow: 3px 3px #888888;
+}
+
+.create_text_input {
+    min-width: 20vw;
 }

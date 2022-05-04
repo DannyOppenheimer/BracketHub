@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Raleway', sans-serif;
+
+    margin: 0 auto;
+    min-width: 100px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+
+    margin-left: 5px;
+
+    align-self: flex-start;
+}
+
+.subtitle {
+    align-self: flex-start;
+}

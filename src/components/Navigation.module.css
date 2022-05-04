@@ -24,7 +24,6 @@
     padding-right: 4vw;
     padding-top: 4vh;
     padding-bottom: 4vh;
-    white-space: nowrap;
 }
 
 .header_button:visited, .header_button:hover, .header_button:active {

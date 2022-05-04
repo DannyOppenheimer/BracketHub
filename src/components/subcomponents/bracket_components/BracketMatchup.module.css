@@ -1,0 +1,45 @@
+
+
+.matchup {
+    font-family: 'Raleway', sans-serif;
+
+    display: flex;
+    flex-direction: column;
+
+    list-style: none;
+    
+    min-width: 300px;
+    border-radius: 5px;
+    border: 2px solid black;
+
+    margin-bottom: auto;
+    
+
+}
+
+.team {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    
+    margin-left: -25px;
+}
+
+.team_input {
+    border: none;
+    outline: none;
+    margin: 0 auto;
+    padding-left: 1vw;
+}
+
+.seed_num {
+    min-width: 30px;
+    margin: 0 auto;
+    border-right: 2px solid black;
+}
+
+.lower_line {
+    border-bottom: 2px solid black;
+    margin-left: 3px;
+}
+
