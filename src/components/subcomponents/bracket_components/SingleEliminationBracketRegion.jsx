@@ -9,51 +9,45 @@ function getBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
 }
 
+let prefabs = {
+    '2': [1, 2],
+    '4': [1, 4, 2, 3],
+    '8': [1, 8, 4, 5, 3, 6, 2, 7],
+    '16': [1, 16, 8, 9, 5, 12, 4, 13, 3, 14, 6, 11, 7, 10, 2, 15],
+    '32': [1, 32, 16, 17, 9, 24, 8, 25, 5, 28, 12, 21, 13, 20, 4, 29, 3, 30, 14, 19, 11, 22, 6, 27, 7, 26, 10, 23, 15, 18, 2, 31]
+}
 
 /***************************
 * FOR BRACKET PROPOGRATION *
 ****************************/
-// Check if a certain round (like the round of 64, the round of 32) has already propograted ALL teams back to the next round
-function roundIsFull(round) {
-    let teamExists = false;
-    for(let i in round) {
-        if(round[i].team1 !== null || round[i].team2 !== null) {
-            teamExists = true;
-            break;
-        }
-    }
-    return teamExists;
-}
-
-// Get the highest seed in the specified round (like the round of 64, the round of 32)
-function highestSeededTeamAndMatchup(round) {
-    let highestSeed = 0;
-    let matchupNumberAtHiSeed = 0;
+// Get the lowest seed in the specified round (like the round of 64, the round of 32)
+function lowestSeededTeamAndMatchup(round) {
+    let lowestSeed = 0;
+    let matchupNumberAtLoSeed = 0;
     let teamAtHiSeed = 0;
 
     for(let i in round) {
-        // Check if team 1's seed is higher
-        if(round[i].team1 > highestSeed) {
-            highestSeed = round[i].team1;
-            matchupNumberAtHiSeed = i;
-            teamAtHiSeed = 'team1';
-        }
-        // Check if team 2's seed is higher
-        if(round[i].team2 > highestSeed) {
-            highestSeed = round[i].team2;
-            matchupNumberAtHiSeed = i;
+        // Check if team 1's seed is lower
+        if(round[i].team1 > lowestSeed) {
+            lowestSeed = round[i].team1;
+            matchupNumberAtLoSeed = i;
             teamAtHiSeed = 'team2';
         }
+        // Check if team 2's seed is lower
+        if(round[i].team2 > lowestSeed) {
+            lowestSeed = round[i].team2;
+            matchupNumberAtLoSeed = i;
+            teamAtHiSeed = 'team1';
+        }
     }
-    // Return data that includes the highest seed, the matchup where that high seed occurs, and the team that the high seed occurs
+    // Return data that includes the lowest seed, the matchup where that low seed occurs, and the team that the low seed occurs
     return {
-        highestSeed: highestSeed,
-        matchupNumberAtHiSeed: matchupNumberAtHiSeed,
+        lowestSeed: lowestSeed,
+        matchupNumberAtLoSeed: matchupNumberAtLoSeed,
         teamAtHiSeed: teamAtHiSeed
     }
 }
 let currentSeed = 2;
-
 
 /****************************/
 
@@ -61,9 +55,6 @@ const SingleEliminationBracketRegion = ({ data }) => {
 
     // easy to access user preference
     const seedingOn = data['Seeding'] === 'on' ? true : false;
-
-    console.log(seedingOn);
-
     const numTeams = data['Participants Per Region'];
     const numRounds = Math.ceil(getBaseLog(2, numTeams))
 
@@ -71,6 +62,7 @@ const SingleEliminationBracketRegion = ({ data }) => {
 
     // If only 1 team is present in a matchup, label it correctly
     const setSoloTeam = (round, matchup) => {
+       
         if(bracket[round][matchup].team1 === null && bracket[round][matchup].team2 !== null) {
             bracket[round][matchup].soloTeam = true;
         } else if(bracket[round][matchup].team2 === null && bracket[round][matchup].team1 !== null) {
@@ -82,67 +74,96 @@ const SingleEliminationBracketRegion = ({ data }) => {
         }
     }
 
+    // make sure that teams recieving a by-week are placed correctly between "team1" and "team2"
+    // for example, when there are 6 teams, seed 1 would be on the top of the 2nd round, while seed 2 would be at the very bottom
+    const checkTeamTopBottom = () => {
+        for(let i = 1; i <= numRounds; i++) {
+            let currentRound = bracket[i];
+            for(let j = 1; j <= Object.keys(currentRound).length; j++) {
+                
+                // boolean checks to carry out team switch
+                let isTeamSolo = bracket[i][j].soloTeam;
+                let isMatchupNumEven = j % 2 == 0;
+                let isTeamInTeam1 = bracket[i][j].team1 !== null;
+
+                if(isTeamSolo && isMatchupNumEven && isTeamInTeam1) {
+                    bracket[i][j].team2 = bracket[i][j].team1;
+                    bracket[i][j].team1 = null;
+                }
+            }
+        }
+    }
+  
     // Initialize an empty bracket with settings at null or false.
     for(let i = 1; i <= numRounds; i++) {
         bracket[i] = {}
         for(let j = 1; j <= (2**i) / 2; j++) {
-            bracket[i][j] = {
-                team1: null,
-                team2: null,
-                team1Score: null,
-                team2Score: null,
-                teamselected: null,
-                editable: false,
-                showScores: false,
-                showWinner: false,
-                showSelection: false,
-                soloTeam: false,
-                won: false,
+            if(i == numRounds) {
+                bracket[i][j] = {
+                    team1: prefabs[2**numRounds][(j - 1) * 2],
+                    team2: prefabs[2**numRounds][(j - 1) * 2 + 1],
+                    team1Score: null,
+                    team2Score: null,
+                    team1name: null,
+                    team2name: null,
+                    teamselected: null,
+                    editable: false,
+                    showScores: false,
+                    showWinner: false,
+                    showSelection: false,
+                    soloTeam: false,
+                    won: false,
+                }
+            } else {
+                bracket[i][j] = {
+                    team1: null,
+                    team2: null,
+                    team1Score: null,
+                    team2Score: null,
+                    team1name: null,
+                    team2name: null,
+                    teamselected: null,
+                    editable: false,
+                    showScores: false,
+                    showWinner: false,
+                    showSelection: false,
+                    soloTeam: false,
+                    won: false,
+                }
             }
+            
         }
     }
-    
-    // Initial condition, seeds 1 and 2 are in the finals
-    bracket[1][1].team1 = 1;
-    bracket[1][1].team2 = 2;
 
     // Propogate through bracket started in the finals round to correctly create bye-weeks and seeding
     
-    for(let roundNum in bracket) {
-        let currentMatchupSpotInEarlierRound = 1;
+
+    let lowestSeedInfo = lowestSeededTeamAndMatchup(bracket[numRounds]);
+
+    while(lowestSeedInfo.lowestSeed > numTeams) {
         
-        while(roundIsFull(bracket[roundNum])) {
-            if(currentSeed === parseInt(numTeams)) break;
+        let lowestSeed = lowestSeedInfo.lowestSeed;
+        let matchupNumberAtLoSeed = lowestSeedInfo.matchupNumberAtLoSeed;
+        let teamAtHiSeed = lowestSeedInfo.teamAtHiSeed;
 
-            let highestSeedInfo = highestSeededTeamAndMatchup(bracket[roundNum]);
-            let newSeed1 = highestSeedInfo.highestSeed;
-            let newSeed2 = parseInt(currentSeed) + 1;
-            currentSeed = parseInt(currentSeed) + 1;
-
-            // clear old bracket of any seeding
-            bracket[roundNum][highestSeedInfo.matchupNumberAtHiSeed][highestSeedInfo.teamAtHiSeed] = null;
-            setSoloTeam(parseInt(roundNum), parseInt(highestSeedInfo.matchupNumberAtHiSeed));
-
-            let seedBeingPropogated = parseInt(highestSeedInfo.highestSeed);
-            let numTeamsPrev = 2**(parseInt(roundNum)+1);
-            
-            let spot = seedBeingPropogated % 2 === 0 && seedBeingPropogated !== 1 ? Math.floor(numTeamsPrev/seedBeingPropogated) : ((numTeamsPrev/2 - parseInt(Math.floor(numTeamsPrev/seedBeingPropogated))) + 1);
-            if(seedBeingPropogated === 1) {
-                spot = 1;
-            }
-
-            // Place data (newSeed1, newSeed2) into next round
-            bracket[parseInt(roundNum) + 1][spot].team1 = newSeed1;
-            bracket[parseInt(roundNum) + 1][spot].team2 = newSeed2;
-            currentMatchupSpotInEarlierRound++;
-
-            console.log(`Seed1: ${newSeed1} Seed2: ${newSeed2}`)
-            console.log(`NumTeams: ${numTeamsPrev} Spot: ${spot}`)
-
-            
+        let nextUpSpot = Math.ceil(matchupNumberAtLoSeed / 2);
+        
+        if(bracket[numRounds - 1][nextUpSpot].team1 == null) {
+            bracket[numRounds - 1][nextUpSpot].team1 = bracket[numRounds][matchupNumberAtLoSeed][teamAtHiSeed];
+        } else {
+            bracket[numRounds - 1][nextUpSpot].team2 = bracket[numRounds][matchupNumberAtLoSeed][teamAtHiSeed];
         }
+        
+        
+    
+        bracket[numRounds][matchupNumberAtLoSeed].team1 = null
+        bracket[numRounds][matchupNumberAtLoSeed].team2 = null
+        
+        setSoloTeam(numRounds - 1, Math.ceil(matchupNumberAtLoSeed / 2));
+        checkTeamTopBottom();
+        lowestSeedInfo = lowestSeededTeamAndMatchup(bracket[numRounds]);
+        
     }
-    console.log(bracket);
 
 
     return (
@@ -153,38 +174,39 @@ const SingleEliminationBracketRegion = ({ data }) => {
                         <div className={styles.column}>
                             {
                                 Object.keys(bracket[round]).map((matchup, j) => {
+                                    
                                     return (
-                                        <div className={styles.cell}>
+                                        <div className={styles.inlineConnecter}>
+                                            
+                                            <div className={styles.cell}>
+                                                {
+                                                    bracket[round][matchup].team1 === null &&  bracket[round][matchup].team2 === null
+                                                    ?
+                                                        <BracketMatchup_INACTIVE oneTeam={false}  />
+                                                    :
+                                                        <BracketMatchup_BLANK seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} />
+                                                        
+                                                }
+                                            </div>
+                                            
                                             {
-                                                bracket[round][matchup].oneTeam === true 
+                                                round != 1 /*&& bracket[round][matchup].team1 !== null &&  bracket[round][matchup].team2 !== null*/
                                                 ?
-                                                    <BracketMatchup_BLANK seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} oneTeam={true} />
+                                                <div className={styles.connector}>
+                                                    <div className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
+                                                    <div className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
+                                                </div>
                                                 :
-                                                    <>
-                                                        {
-                                                            bracket[round][matchup].team1 === null 
-                                                            ?   
-                                                                <>
-                                                                    {
-                                                                        bracket[round][matchup].team2 === null 
-                                                                        ?
-                                                                            <BracketMatchup_INACTIVE oneTeam={false} />
-                                                                        :
-                                                                            <BracketMatchup_INACTIVE oneTeam={true} />
- 
-                                                                    }
-                                                                </>
-                                                                
-                                                            :
-                                                                <BracketMatchup_BLANK seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} oneTeam={false} />
-                                                        }
-                                                    </>
+                                                <></>
                                             }
+                                            
                                         </div>
+                                        
                                     )  
                                 })
                             }
                         </div>
+                        
                     )
                 })
             }

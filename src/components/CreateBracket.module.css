@@ -99,3 +99,13 @@
 .create_text_input {
     min-width: 20vw;
 }
+
+.submit_button {
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    margin-top: 30px;
+
+    width: 100%;
+
+}

@@ -25,6 +25,10 @@ const CreateBracket = () => {
     // JS Object containing the actual GENERATED BRACKET based on the config settings
     const [builtBracket, setBuiltBracket] = useState('');
 
+    const submit = () => {
+
+    }
+
     // Booleans that check the state of the current build, ie. if the user has chosen it to be an online bracket thats public
     const printable = savedBuild['Format'] === 'print';
     const sharable = savedBuild['Format'] === 'online';
@@ -108,11 +112,8 @@ const CreateBracket = () => {
                                 if(e.target.value < 1 && e.target.value !== '') {
                                     e.target.value = 1;
                                 }
-                                if(e.target.value > 128 && e.target.value !== '') {
-                                    e.target.value = 128;
-                                }
-                                if(!((savedBuild['Participants Per Region'] & (savedBuild['Participants Per Region'] - 1)) === 0)) {
-                                    setSavedBuild(delete savedBuild['Playin'])
+                                if(e.target.value > 32 && e.target.value !== '') {
+                                    e.target.value = 32;
                                 }
                                 setSavedBuild({...savedBuild, 'Participants Per Region': e.target.value});
                             }
@@ -134,23 +135,19 @@ const CreateBracket = () => {
                     }
                 </div>
 
-                <div className={styles.decision}>
-                    {/* Last check in this row makes sure that the input isnt a power of 2 (2, 4, 8, 16, 32, 64) so it can give a play in option */}
-                    {(savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '') && ((savedBuild['Participants Per Region'] !== 0) && !((savedBuild['Participants Per Region'] & (savedBuild['Participants Per Region'] - 1)) === 0)) ? 
-                        <>
-                            <StyleButton clicked={() => setSavedBuild({...savedBuild, 'Playin': 'on'})} text='Play-in Games Enabled'/>
-                            <StyleButton clicked={() => setSavedBuild({...savedBuild, 'Playin': 'off'})} text='Play-in Games Disabled'/>
-                        </>
-                    :
-                        <></>
-                    }
-                </div>
+                
                 
             </div>
             <>
                 {
-                    (savedBuild['Playin'] !== undefined && savedBuild['Playin'] !== undefined) || ((savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '') && ((savedBuild['Participants Per Region'] & (savedBuild['Participants Per Region'] - 1)) === 0)) ?
-                        <SingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} />
+                    (savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '') ?
+                        <>
+                            
+                            <SingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} />
+                            <div className={styles.submit_button}>
+                                <StyleButton clicked={() => submit()} text='Submit Bracket'/>
+                            </div>
+                        </>
                     :
                         <></>
                 }

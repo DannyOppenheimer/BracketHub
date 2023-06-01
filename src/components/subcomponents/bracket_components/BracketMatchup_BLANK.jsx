@@ -4,10 +4,22 @@ import PropTypes from 'prop-types';
 
 const BracketMatchup_BLANK = ({ seedingEnabled, seed1, seed2, oneTeam, returnTeams }) => {
   return (
+    <div className={styles.blank_matchup}>
     <ul className={styles.matchup}>
         <li className={styles.team}>
-          <p className={styles.seed_num}>{seedingEnabled ? seed1 : <></>}</p>
-          <input className={styles.team_input} type='text' placeholder='Team 1' />
+          {
+            seed1 === null 
+            ?
+              <>
+                <p className={styles.seed_num}><></></p>
+                <input className={styles.team_input} type='text' disabled={true} />
+              </>
+            :
+              <>
+                <p className={styles.seed_num}>{seedingEnabled ? seed1 : <></>}</p>
+                <input className={styles.team_input} type='text' placeholder='Team 1' />
+              </>
+          }
         </li>
         <div className={styles.lower_line}></div>
         <li className={styles.team}>
@@ -28,6 +40,7 @@ const BracketMatchup_BLANK = ({ seedingEnabled, seed1, seed2, oneTeam, returnTea
          
         </li>
     </ul>
+    </div>
   )
 }
 
