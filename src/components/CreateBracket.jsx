@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import StyleButton from './subcomponents/StyleButton';
-import './subcomponents/FirebaseConfig';
+import { app } from './subcomponents/FirebaseConfig';
 import styles from './CreateBracket.module.css';
 import SingleEliminationBracket from './subcomponents/bracket_components/SingleEliminationBracket';
 import SubtitleWithInfo from './subcomponents/SubtitleWithInfo';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
+import { getFirestore } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore"; 
+import { initializeApp } from "firebase/app";
 
 
 let currentUser = '';
@@ -25,8 +28,24 @@ const CreateBracket = () => {
     // JS Object containing the actual GENERATED BRACKET based on the config settings
     const [builtBracket, setBuiltBracket] = useState('');
 
-    const submit = () => {
+    const submit = async () => {
 
+        if(savedBuild['Format'] === 'online') {
+            let host = currentUser;
+            let joinCode = (Math.random().toString(36)+'00000000000000000').slice(2, 7);
+
+            const db = getFirestore(app);
+            await setDoc(doc(db, "ActiveGames", joinCode), {
+                name: savedBuild['Title'],
+                regionNum: savedBuild['Regions'],
+                host: host.uid,
+                players: [host.uid],
+                data: builtBracket,
+                perRegion: savedBuild['Participants Per Region'],
+                seeded: savedBuild['Seeding']
+
+            });
+        }
     }
 
     // Booleans that check the state of the current build, ie. if the user has chosen it to be an online bracket thats public
@@ -143,7 +162,7 @@ const CreateBracket = () => {
                     (savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '') ?
                         <>
                             
-                            <SingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} />
+                            <SingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} currentBracketBuild={builtBracket} />
                             <div className={styles.submit_button}>
                                 <StyleButton clicked={() => submit()} text='Submit Bracket'/>
                             </div>

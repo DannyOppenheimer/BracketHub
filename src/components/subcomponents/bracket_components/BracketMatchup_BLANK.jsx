@@ -2,7 +2,19 @@ import React from 'react';
 import styles from './BracketMatchup.module.css';
 import PropTypes from 'prop-types';
 
-const BracketMatchup_BLANK = ({ seedingEnabled, seed1, seed2, oneTeam, returnTeams }) => {
+
+
+
+const BracketMatchup_BLANK = ({ seedingEnabled, region, seed1, seed2, sendBracketUp, currentBracketBuild }) => {
+
+  // Every time an input is changed, the JS object holding all bracket data is updated
+  const handleChange = (e, seed) => {
+    sendBracketUp({...currentBracketBuild, [region]: {
+        ...currentBracketBuild[region],
+        [seed]: e.target.value
+    }})
+  }
+
   return (
     <div className={styles.blank_matchup}>
     <ul className={styles.matchup}>
@@ -17,7 +29,8 @@ const BracketMatchup_BLANK = ({ seedingEnabled, seed1, seed2, oneTeam, returnTea
             :
               <>
                 <p className={styles.seed_num}>{seedingEnabled ? seed1 : <></>}</p>
-                <input className={styles.team_input} type='text' placeholder='Team 1' />
+                {/* Here, the input will detect change as users type and send the data all the way back to the CreateBracket component */}
+                <input className={styles.team_input} type='text' onChange={(e) => handleChange(e, seed1)} placeholder='Team 1' />
               </>
           }
         </li>
@@ -34,7 +47,8 @@ const BracketMatchup_BLANK = ({ seedingEnabled, seed1, seed2, oneTeam, returnTea
             :
               <>
                 <p className={styles.seed_num}>{seedingEnabled ? seed2 : <></>}</p>
-                <input className={styles.team_input} type='text' placeholder='Team 2' />
+                {/* Here, the input will detect change as users type and send the data all the way back to the CreateBracket component */}
+                <input className={styles.team_input} type='text' onChange={(e) => handleChange(e, seed2)} placeholder='Team 2' />
               </>
           }
          

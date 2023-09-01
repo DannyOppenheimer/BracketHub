@@ -6,16 +6,14 @@ import { useRef } from "react";
 import BracketMatchup_BLANK from './BracketMatchup_BLANK';
 import SingleEliminationBracketRegion from './SingleEliminationBracketRegion';
 
-const SingleEliminationBracket = ({ data }, sendBracketUp) => {
+const SingleEliminationBracket = ({ data, sendBracketUp, currentBracketBuild }) => {
 
     let regions = [];
-    console.log(data);
     for(let i = 0; i < data['Regions']; i++) {
-        console.log(i)
         regions.push(
             <>  
                 <p>Region {i + 1}</p>
-                <SingleEliminationBracketRegion data={data} sendBracketUp={sendBracketUp} />
+                <SingleEliminationBracketRegion regionNum={i + 1} data={data} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
             </>
         );
     }

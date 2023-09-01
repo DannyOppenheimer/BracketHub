@@ -51,7 +51,7 @@ let currentSeed = 2;
 
 /****************************/
 
-const SingleEliminationBracketRegion = ({ data }) => {
+const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, currentBracketBuild }) => {
 
     // easy to access user preference
     const seedingOn = data['Seeding'] === 'on' ? true : false;
@@ -167,50 +167,52 @@ const SingleEliminationBracketRegion = ({ data }) => {
 
 
     return (
+   
         <div className={styles.container}>
-            {
-                Object.keys(bracket).map((round, i) => {
-                    return (
-                        <div className={styles.column}>
-                            {
-                                Object.keys(bracket[round]).map((matchup, j) => {
-                                    
-                                    return (
-                                        <div className={styles.inlineConnecter}>
-                                            
-                                            <div className={styles.cell}>
-                                                {
-                                                    bracket[round][matchup].team1 === null &&  bracket[round][matchup].team2 === null
-                                                    ?
-                                                        <BracketMatchup_INACTIVE oneTeam={false}  />
-                                                    :
-                                                        <BracketMatchup_BLANK seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} />
-                                                        
-                                                }
-                                            </div>
-                                            
+        {
+            Object.keys(bracket).map((round, i) => {
+                return (
+                    <div className={styles.column}>
+                        {
+                            Object.keys(bracket[round]).map((matchup, j) => {
+                                
+                                return (
+                                    <div className={styles.inlineConnecter}>
+                                        
+                                        <div className={styles.cell}>
                                             {
-                                                round != 1 /*&& bracket[round][matchup].team1 !== null &&  bracket[round][matchup].team2 !== null*/
+                                                bracket[round][matchup].team1 === null && bracket[round][matchup].team2 === null
                                                 ?
-                                                <div className={styles.connector}>
-                                                    <div className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
-                                                    <div className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
-                                                </div>
+                                                    <BracketMatchup_INACTIVE oneTeam={false}  />
                                                 :
-                                                <></>
+                                                    <BracketMatchup_BLANK region={regionNum} seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
+                                                    
                                             }
-                                            
                                         </div>
                                         
-                                    )  
-                                })
-                            }
-                        </div>
-                        
-                    )
-                })
-            }
+                                        {
+                                            round != 1 /*&& bracket[round][matchup].team1 !== null &&  bracket[round][matchup].team2 !== null*/
+                                            ?
+                                            <div className={styles.connector}>
+                                                <div className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
+                                                <div className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
+                                            </div>
+                                            :
+                                            <></>
+                                        }
+                                        
+                                    </div>
+                                    
+                                )  
+                            })
+                        }
+                    </div>
+                    
+                )
+            })
+        }
         </div>
+        
     )
 }
 
