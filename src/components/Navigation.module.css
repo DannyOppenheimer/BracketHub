@@ -13,17 +13,23 @@
     border-radius: 10px;
     padding-top: 4vh;
     padding-bottom: 4vh;
+
 }
 
 .header_button {
+    color: red;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+
     color: black;
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
 
-    padding-left: 4vw;
-    padding-right: 4vw;
+    padding-left: 4vh;
+    padding-right: 4vh;
     padding-top: 4vh;
     padding-bottom: 4vh;
+
 }
 
 .header_button:visited, .header_button:hover, .header_button:active {

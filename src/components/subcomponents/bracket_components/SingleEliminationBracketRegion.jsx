@@ -51,6 +51,15 @@ let currentSeed = 2;
 
 /****************************/
 
+// not working rn
+const setScrollPosition = () => {
+    
+    const element = document.getElementById('container');
+
+    console.log("Setting scroll");
+    element.scrollLeft = -100;
+};
+
 const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, currentBracketBuild }) => {
 
     // easy to access user preference
@@ -168,24 +177,25 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
 
     return (
    
-        <div className={styles.container}>
+        <div onLoad={() => setScrollPosition} className={styles.container}>
         {
             Object.keys(bracket).map((round, i) => {
                 return (
-                    <div className={styles.column}>
+                    // Key set to round and the increment
+                    <div key={`${round}_${i}`} className={styles.column}>
                         {
                             Object.keys(bracket[round]).map((matchup, j) => {
                                 
                                 return (
-                                    <div className={styles.inlineConnecter}>
+                                    <div key={`inline_connector_${j}`} className={styles.inlineConnecter}>
                                         
-                                        <div className={styles.cell}>
+                                        <div key={`cell_${j}`} className={styles.cell}>
                                             {
                                                 bracket[round][matchup].team1 === null && bracket[round][matchup].team2 === null
                                                 ?
-                                                    <BracketMatchup_INACTIVE oneTeam={false}  />
+                                                    <BracketMatchup_INACTIVE key={`inactive_cell_${j}`} oneTeam={false}  />
                                                 :
-                                                    <BracketMatchup_BLANK region={regionNum} seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
+                                                    <BracketMatchup_BLANK key={`cell_${bracket[round][matchup].team1}_${bracket[round][matchup].team2}`} region={regionNum} seedingEnabled={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
                                                     
                                             }
                                         </div>
@@ -193,9 +203,9 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
                                         {
                                             round != 1 /*&& bracket[round][matchup].team1 !== null &&  bracket[round][matchup].team2 !== null*/
                                             ?
-                                            <div className={styles.connector}>
-                                                <div className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
-                                                <div className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
+                                            <div key={`connector_${j}`} className={styles.connector}>
+                                                <div key={`Ltop_connector_${j}`} className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
+                                                <div key={`Rtop_connector_${j}`} className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
                                             </div>
                                             :
                                             <></>

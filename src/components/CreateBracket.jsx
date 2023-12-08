@@ -6,9 +6,9 @@ import SingleEliminationBracket from './subcomponents/bracket_components/SingleE
 import SubtitleWithInfo from './subcomponents/SubtitleWithInfo';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
-import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore"; 
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore"; 
 import { initializeApp } from "firebase/app";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 let currentUser = '';
@@ -29,12 +29,16 @@ const CreateBracket = () => {
     const [builtBracket, setBuiltBracket] = useState('');
 
     const submit = async () => {
-
+        // If the build is set to an online version, get ready to update firestore database
         if(savedBuild['Format'] === 'online') {
             let host = currentUser;
+            // Create a random alphanumerical join code 5 characters long
             let joinCode = (Math.random().toString(36)+'00000000000000000').slice(2, 7);
 
             const db = getFirestore(app);
+            console.log("making the bracket");
+
+            // Create a new document for the new bracket group
             await setDoc(doc(db, "ActiveGames", joinCode), {
                 name: savedBuild['Title'],
                 regionNum: savedBuild['Regions'],
@@ -45,6 +49,22 @@ const CreateBracket = () => {
                 seeded: savedBuild['Seeding']
 
             });
+
+            let docRef = doc(db, "Users", host.uid);
+            const docSnap = await getDoc(docRef);
+            // Check if a user has already created or joined a game, and then add this game to their array
+            if (docSnap.exists()) {
+                await updateDoc(doc(db, "Users", host.uid), {
+                    games: arrayUnion(joinCode),
+                });
+            } else {
+                await setDoc(doc(db, "Users", host.uid), {
+                    displayName: host.displayName,
+                    games: [joinCode],
+                });
+            }
+
+            console.log("sending to bracket");
         }
     }
 

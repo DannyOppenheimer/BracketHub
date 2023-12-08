@@ -12,7 +12,8 @@ import {
   Explore,
   Account,
   Signin,
-  Signup
+  Signup,
+  Confirmation
 } from "./components";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -25,9 +26,10 @@ root.render(
       <Route path="/join-bracket" element={<JoinBracketGroup />} />
       <Route path="/bracket-groups" element={<MyBracketGroups />} />
       <Route path="/explore" element={<Explore />} />
-      <Route path="/Account" element={<Account />} />
-      <Route path="/Signin" element={<Signin />} />
-      <Route path="/Signup" element={<Signup />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/signin" element={<Signin />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/confirmation" element={<Confirmation />} />
     </Routes>
   </Router>
 );

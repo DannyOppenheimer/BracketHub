@@ -12,8 +12,8 @@ const SingleEliminationBracket = ({ data, sendBracketUp, currentBracketBuild }) 
     for(let i = 0; i < data['Regions']; i++) {
         regions.push(
             <>  
-                <p>Region {i + 1}</p>
-                <SingleEliminationBracketRegion regionNum={i + 1} data={data} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
+                <p key={`region_num_${i + 1}`}>Region {i + 1}</p>
+                <SingleEliminationBracketRegion key={`region_${i + 1}`} regionNum={i + 1} data={data} sendBracketUp={sendBracketUp} currentBracketBuild={currentBracketBuild} />
             </>
         );
     }

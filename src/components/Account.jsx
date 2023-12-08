@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './subcomponents/FirebaseConfig';
 import styles from "./Account.module.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import StyleButton from './subcomponents/StyleButton';
 
 let currentUser = '';
 const auth = getAuth();
@@ -13,6 +14,15 @@ onAuthStateChanged(auth, (user) => {
     currentUser = "N/A"
   }
 });
+
+const logout = () => {
+    auth.signOut().then(() => {
+        const navigate = useNavigate();
+        navigate('/');
+    }, function(error) {
+        // An error happened.
+    });
+}
 
 const Account = () => {
 
@@ -33,6 +43,7 @@ const Account = () => {
                                 </tr>
                             </tbody>
                         </table>
+                        <StyleButton text={"Log Out"} clicked={logout} />
                     </>
                 ) : 
                 (

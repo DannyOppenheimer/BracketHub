@@ -7,7 +7,8 @@
     /* This flex display is on the overall bracket. It will show the columns of each round */
     display: flex;
     flex-direction: row-reverse;
-    
+    direction: ltr;
+
     overflow-y: hidden;
     overflow-x: scroll;
 }

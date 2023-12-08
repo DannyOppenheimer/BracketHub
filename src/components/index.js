@@ -8,3 +8,4 @@ export { default as Explore } from "./Explore";
 export { default as Account } from "./Account";
 export { default as Signin } from "./Signin";
 export { default as Signup } from "./Signup";
+export { default as Confirmation } from "./Confirmation"
