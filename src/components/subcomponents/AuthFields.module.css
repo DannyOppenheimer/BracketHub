@@ -36,10 +36,12 @@
 
 .errors {
     color: red;
+    margin: 0 auto;
 }
 
 .success {
     color: green;
+    margin: 0 auto;
 }
 
 .already_signed_in {

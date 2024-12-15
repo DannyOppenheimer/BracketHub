@@ -174,8 +174,6 @@ const CreateBracket = () => {
                     }
                 </div>
 
-                
-                
             </div>
             <>
                 {

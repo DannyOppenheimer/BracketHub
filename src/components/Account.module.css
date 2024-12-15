@@ -1,4 +1,20 @@
+.container {
+    width: 50%;
+    margin: 5vh auto;
+
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
+    border: 3px solid lightgray;
+
+    box-shadow: 5px 5px 5px lightgray;
+}
 
 
+.loading {
 
-
+    text-align: center;
+    
+}
