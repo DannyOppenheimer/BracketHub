@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './subcomponents/FirebaseConfig';
 import styles from "./Account.module.css";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { Navigate, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import StyleButton from './subcomponents/StyleButton';
 
 const Account = () => {
     const [currentUser, setCurrentUser] = useState(null);  // Manage user state
-    const [loading, setLoading] = useState(true);         // Manage loading state
+    const [loading, setLoading] = useState(true);          // Manage loading state
+    const [isEditing, setIsEditing] = useState(false);     // Edit mode state
+    const [newDisplayName, setNewDisplayName] = useState(''); // New display name input
     const navigate = useNavigate();
     const auth = getAuth();
 
@@ -16,6 +20,7 @@ const Account = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setCurrentUser(user);  // Update current user
+                setNewDisplayName(user.displayName); // Set default display name
             } else {
                 setCurrentUser(null);  // Reset if no user
             }
@@ -33,9 +38,24 @@ const Account = () => {
         });
     };
 
+    // Save the updated display name
+    const handleSave = () => {
+
+        if (currentUser) {
+            updateProfile(currentUser, { displayName: newDisplayName })
+                .then(() => {
+
+                    setIsEditing(false);
+                })
+                .catch((error) => {
+                    console.error("Error updating display name:", error.message);
+                });
+        }
+    };
+
     // Show loading indicator while checking auth
     if (loading) {
-        return <p className={styles.loading}>Loading...</p>;
+        return <p>Loading...</p>;
     }
 
     // Redirect if no user
@@ -45,11 +65,35 @@ const Account = () => {
 
     return (
         <div className={styles.container}>
-            <table>
-                <tbody>
+            <table className={styles.accountInfoTable}>
+                <tbody className={styles.accountInfoTableBody}>
                     <tr>
-                        <td>Username</td>
-                        <td>{currentUser.displayName}</td>
+                        <td>Display Name</td>
+                        <td>
+                            {isEditing ? (
+                                <>
+                                    <input
+                                        type="text"
+                                        value={newDisplayName}
+                                        onChange={(e) => setNewDisplayName(e.target.value)}
+                                        className={styles.editInput}
+                                    />
+                                    
+                                    <button onClick={handleSave} className={styles.saveButton}>
+                                        Save
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    {currentUser.displayName || "No Display Name"}
+                                    <FontAwesomeIcon
+                                        icon={faPencilAlt}
+                                        className={styles.editIcon}
+                                        onClick={() => setIsEditing(true)}
+                                    />
+                                </>
+                            )}
+                        </td>
                     </tr>
                     <tr>
                         <td>Email</td>
@@ -60,6 +104,6 @@ const Account = () => {
             <StyleButton text={"Log Out"} clicked={logout} />
         </div>
     );
-}
+};
 
-export default Account
+export default Account;

@@ -47,18 +47,6 @@ function lowestSeededTeamAndMatchup(round) {
         teamAtHiSeed: teamAtHiSeed
     }
 }
-let currentSeed = 2;
-
-/****************************/
-
-// not working rn
-const setScrollPosition = () => {
-    
-    const element = document.getElementById('container');
-
-    console.log("Setting scroll");
-    element.scrollLeft = -100;
-};
 
 const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, currentBracketBuild }) => {
 
@@ -177,7 +165,7 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
 
     return (
    
-        <div onLoad={() => setScrollPosition} className={styles.container}>
+        <div className={styles.container}>
         {
             Object.keys(bracket).map((round, i) => {
                 return (

@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import './FirebaseConfig';
 
 import { Navigate, useNavigate } from 'react-router-dom';
+
+import { app } from './FirebaseConfig';
+import { getFirestore, doc, setDoc } from "firebase/firestore"; 
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithPopup } from 'firebase/auth';
 
 const AuthFields = ({ title }) => {
@@ -25,6 +28,7 @@ const AuthFields = ({ title }) => {
         'auth/invalid-email': 'Invalid Email.',
         'auth/user-not-found': 'That user does not exist. Please sign up first.',
         'auth/wrong-password': 'Incorrect password.',
+        'auth/email-already-in-use': 'That email is already in use.'
     };
 
     // Listen for auth state changes on page load
@@ -41,6 +45,7 @@ const AuthFields = ({ title }) => {
 
     // Handle authentication based on the command
     const handleAuthentication = (command) => {
+        const db = getFirestore(app);
         setError('');
         setSuccess('');
 
@@ -51,6 +56,7 @@ const AuthFields = ({ title }) => {
                     setSuccess('Sign in successful.');
                 })
                 .catch((error) => {
+                    alert(error.code);
                     setError(errorMessageMap[error.code] || 'An error occurred.');
                 });
         } else if (command === 'Sign Up') {
@@ -60,6 +66,13 @@ const AuthFields = ({ title }) => {
                     user.displayName = username;
                     setSuccess('Sign up successful. Please check your email for verification.');
                     sendEmailVerification(user);
+
+                   
+                    setDoc(doc(db, "Users", user.uid), {
+                        displayName: user.displayName,
+                        games: [],
+                    });
+
                 })
                 .catch((error) => {
                     setError(errorMessageMap[error.code] || 'An error occurred.');
@@ -69,6 +82,12 @@ const AuthFields = ({ title }) => {
                 .then((result) => {
                     setCurrentUser(result.user);
                     setSuccess('Sign in with Google successful.');
+
+                    setDoc(doc(db, "Users", result.user.uid), {
+                        displayName: result.user.displayName,
+                        games: [],
+                    });
+
                 })
                 .catch((error) => {
                     setError(errorMessageMap[error.code] || 'An error occurred.');

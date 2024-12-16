@@ -109,3 +109,10 @@
     width: 100%;
 
 }
+
+.bracket_container {
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}

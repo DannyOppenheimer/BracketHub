@@ -10,7 +10,6 @@ import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from "fireba
 import { initializeApp } from "firebase/app";
 import { Navigate, useNavigate } from 'react-router-dom';
 
-
 let currentUser = '';
 const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
@@ -36,6 +35,7 @@ const CreateBracket = () => {
             let joinCode = (Math.random().toString(36)+'00000000000000000').slice(2, 7);
 
             const db = getFirestore(app);
+            
             console.log("making the bracket");
 
             // Create a new document for the new bracket group
@@ -58,10 +58,7 @@ const CreateBracket = () => {
                     games: arrayUnion(joinCode),
                 });
             } else {
-                await setDoc(doc(db, "Users", host.uid), {
-                    displayName: host.displayName,
-                    games: [joinCode],
-                });
+                console.log("user does not exist");
             }
 
             console.log("sending to bracket");
@@ -174,6 +171,7 @@ const CreateBracket = () => {
                     }
                 </div>
 
+            
             </div>
             <>
                 {
