@@ -91,3 +91,12 @@
 
     border-radius: 4px;
 }
+
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: black;
+    margin-top: 2rem;
+    font-family: 'Raleway', sans-serif;
+    
+}

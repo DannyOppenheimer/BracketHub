@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './SingleEliminationBracketRegion.module.css';
 import BracketMatchup_BLANK from './BracketMatchup_BLANK';
 import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
-import SingleEliminationBracket from './SingleEliminationBracket';
 
 // regular function to just get the log base x of a number y
 function getBaseLog(x, y) {
@@ -80,7 +79,7 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
                 
                 // boolean checks to carry out team switch
                 let isTeamSolo = bracket[i][j].soloTeam;
-                let isMatchupNumEven = j % 2 == 0;
+                let isMatchupNumEven = j % 2 === 0;
                 let isTeamInTeam1 = bracket[i][j].team1 !== null;
 
                 if(isTeamSolo && isMatchupNumEven && isTeamInTeam1) {
@@ -95,7 +94,7 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
     for(let i = 1; i <= numRounds; i++) {
         bracket[i] = {}
         for(let j = 1; j <= (2**i) / 2; j++) {
-            if(i == numRounds) {
+            if(i === numRounds) {
                 bracket[i][j] = {
                     team1: prefabs[2**numRounds][(j - 1) * 2],
                     team2: prefabs[2**numRounds][(j - 1) * 2 + 1],
@@ -139,7 +138,6 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
 
     while(lowestSeedInfo.lowestSeed > numTeams) {
         
-        let lowestSeed = lowestSeedInfo.lowestSeed;
         let matchupNumberAtLoSeed = lowestSeedInfo.matchupNumberAtLoSeed;
         let teamAtHiSeed = lowestSeedInfo.teamAtHiSeed;
 
@@ -189,11 +187,11 @@ const SingleEliminationBracketRegion = ({ data, regionNum, sendBracketUp, curren
                                         </div>
                                         
                                         {
-                                            round != 1 /*&& bracket[round][matchup].team1 !== null &&  bracket[round][matchup].team2 !== null*/
+                                            round !== 1 
                                             ?
                                             <div key={`connector_${j}`} className={styles.connector}>
-                                                <div key={`Ltop_connector_${j}`} className={matchup % 2 != 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
-                                                <div key={`Rtop_connector_${j}`} className={matchup % 2 != 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
+                                                <div key={`Ltop_connector_${j}`} className={matchup % 2 !== 0 ? (styles.connectorLTop) : (styles.connectorLBot)}></div>
+                                                <div key={`Rtop_connector_${j}`} className={matchup % 2 !== 0 ? (styles.connectorRTop) : (styles.connectorRBot)}></div>
                                             </div>
                                             :
                                             <></>

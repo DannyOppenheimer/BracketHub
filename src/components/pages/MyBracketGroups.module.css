@@ -1,0 +1,93 @@
+.container {
+    width: 50%;
+    margin: 5vh auto;
+
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
+    border: 3px solid lightgray;
+
+    box-shadow: 5px 5px 5px lightgray;
+}
+
+/* Title */
+.title {
+    font-family: 'Raleway', sans-serif;
+
+    text-align: center;
+    color: black;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* Loading and Not Signed In States */
+.loading, .notSignedIn {
+    text-align: center;
+    font-size: 1.2rem;
+    color: black;
+    margin-top: 2rem;
+    font-family: 'Raleway', sans-serif;
+    
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tableHeader th {
+    background-color: #e23cc6;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Raleway', sans-serif;
+
+}
+
+
+.tableRow:hover {
+    background-color: #ffe1fa;
+    transition: background 0.3s ease;
+}
+
+.cell {
+    padding: 0.8rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    font-family: 'Raleway', sans-serif;
+
+}
+
+/* No Games Message */
+.noGames {
+    text-align: center;
+    padding: 1rem;
+    color: #777;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tableHeader th, .cell {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

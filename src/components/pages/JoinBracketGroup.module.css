@@ -1,0 +1,93 @@
+/* Container Styling */
+.container {
+    width: 50%;
+    margin: 5vh auto;
+
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
+    border: 3px solid lightgray;
+
+    box-shadow: 5px 5px 5px lightgray;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Title Styling */
+.title {
+    font-family: 'Raleway', sans-serif;
+
+    font-size: 2rem;
+    font-weight: 1000;
+    margin-bottom: 1rem;
+}
+
+/* Label Styling */
+.label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* Input Field */
+.codeInput {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+
+    max-width: 300px;
+    text-align: center;
+}
+
+.codeInput:focus {
+    outline: none;
+    border-color: #424242;
+    box-shadow: 0 0 5px rgba(70, 70, 70, 0.5);
+}
+
+/* Submit Button */
+.submitButton {
+    width: 30%;
+    margin: 0 auto;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+
+    color: black;
+
+
+    padding-right: 2.5vw;
+    padding-left: 2.5vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+
+
+    font-family: 'Raleway', sans-serif;
+
+    background-color: #e23cc6;
+
+    border: solid black;
+    box-shadow: 3px 3px #888888;
+
+    border-radius: 4px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submitButton:hover {
+    transform: scale(1.02);
+}
+
+.submitButton:active {
+    transform: scale(0.98);
+}

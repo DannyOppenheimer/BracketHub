@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import './subcomponents/FirebaseConfig';
+import '../subcomponents/FirebaseConfig';
 import styles from "./Account.module.css";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import StyleButton from './subcomponents/StyleButton';
+import StyleButton from '../subcomponents/StyleButton';
 
 const Account = () => {
     const [currentUser, setCurrentUser] = useState(null);  // Manage user state
@@ -55,7 +55,7 @@ const Account = () => {
 
     // Show loading indicator while checking auth
     if (loading) {
-        return <p>Loading...</p>;
+        return <p className={styles.loading}>Loading...</p>;
     }
 
     // Redirect if no user

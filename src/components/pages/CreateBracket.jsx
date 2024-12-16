@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import StyleButton from './subcomponents/StyleButton';
-import { app } from './subcomponents/FirebaseConfig';
+import StyleButton from '../subcomponents/StyleButton';
+import { app } from '../subcomponents/FirebaseConfig';
 import styles from './CreateBracket.module.css';
-import SingleEliminationBracket from './subcomponents/bracket_components/SingleEliminationBracket';
-import SubtitleWithInfo from './subcomponents/SubtitleWithInfo';
+import SingleEliminationBracket from '../subcomponents/bracket_components/SingleEliminationBracket';
+import SubtitleWithInfo from '../subcomponents/SubtitleWithInfo';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore"; 
-import { initializeApp } from "firebase/app";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 
 let currentUser = '';
 const auth = getAuth();
@@ -27,7 +27,15 @@ const CreateBracket = () => {
     // JS Object containing the actual GENERATED BRACKET based on the config settings
     const [builtBracket, setBuiltBracket] = useState('');
 
+    const navigate = useNavigate();
+
     const submit = async () => {
+        confetti({
+            particleCount: 150,
+            spread: 150, // Spread the confetti particles
+            origin: { y: 1.0 }, // Start position at 60% of the height
+        });
+
         // If the build is set to an online version, get ready to update firestore database
         if(savedBuild['Format'] === 'online') {
             let host = currentUser;
@@ -36,7 +44,7 @@ const CreateBracket = () => {
 
             const db = getFirestore(app);
             
-            console.log("making the bracket");
+            
 
             // Create a new document for the new bracket group
             await setDoc(doc(db, "ActiveGames", joinCode), {
@@ -44,9 +52,12 @@ const CreateBracket = () => {
                 regionNum: savedBuild['Regions'],
                 host: host.uid,
                 players: [host.uid],
-                data: builtBracket,
+                teamNames: builtBracket,
                 perRegion: savedBuild['Participants Per Region'],
-                seeded: savedBuild['Seeding']
+                numRegions: savedBuild['Regions'],
+                seeded: savedBuild['Seeding'],
+                access: savedBuild['Access'],
+                deadline: savedBuild['Deadline']
 
             });
 
@@ -56,7 +67,10 @@ const CreateBracket = () => {
             if (docSnap.exists()) {
                 await updateDoc(doc(db, "Users", host.uid), {
                     games: arrayUnion(joinCode),
-                });
+                })
+                setTimeout(() => {
+                    navigate('/bracket-groups');
+                }, 1000);
             } else {
                 console.log("user does not exist");
             }
@@ -79,15 +93,31 @@ const CreateBracket = () => {
 
                 <div className={styles.current_build}>
                     <h2 className={styles.subsubtitle}>Current Build</h2>
-                    {
-                        Object.keys(savedBuild).map((keyName, i) => (
-                            // Each item from the "savedBuild" object. Used to update the current build on the top right of the screen.
-                            // Classname will change when on the last item to draw lines only between each item, not below
-                            <span className={(Object.keys(savedBuild).length - 1) === i ? styles.last : styles.inter} key={'d' + i}>{Object.keys(savedBuild)[i]}: {savedBuild[keyName]} </span>
-                        ))
-                    }
+                    {Object.keys(savedBuild).map((keyName, i) => {
+                        // Check if the key is 'Deadline' and format it
+                        let displayValue = savedBuild[keyName];
+                        if (keyName === 'Deadline' && savedBuild[keyName]) {
+                        const date = new Date(savedBuild[keyName]);
+                        displayValue = date.toLocaleString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        });
+                        }
 
-                </div>
+                        return (
+                        <span
+                            className={(Object.keys(savedBuild).length - 1) === i ? styles.last : styles.inter}
+                            key={'d' + i}
+                        >
+                            {keyName}: {displayValue}
+                        </span>
+                        );
+                    })}
+                    </div>
 
                 <div className={styles.decision}>
                     <StyleButton clicked={() => {setSavedBuild({'Format': 'print'})}} text='Printable PDF Bracket'/>
@@ -170,12 +200,53 @@ const CreateBracket = () => {
                         <></>
                     }
                 </div>
+                <div className={styles.decision}>
+                    {savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '' && savedBuild['Format'] === 'online' ? 
+                        <>
+                            <SubtitleWithInfo title='Deadline To Make Picks' popupText='The date and time that participants must enter their predictions by.' />
+                            {/* Blur function prevents "scrolling" on top of number inputs from changing the number */}
+                            <input
+                            className={styles.create_text_input}
+                            onWheel={(e) => e.target.blur()}
+                            type="datetime-local"
+                            placeholder="Deadline"
+                            onBlur={(e) => {
+                                const currentDate = new Date(); // Get the current date and time
+                                const inputDate = new Date(e.target.value); // Parse the input value to a Date object
+
+                                // Check if the input date is valid and in the past
+                                if (inputDate < currentDate) {
+                                // Add 24 hours to the current date and time
+                                const newDeadline = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+
+                                // Format the new deadline as 'YYYY-MM-DDTHH:MM' for datetime-local input
+                                const formattedDeadline = newDeadline.toISOString().slice(0, 16);
+
+                                // Update the input field value and state
+                                e.target.value = formattedDeadline;
+                                setSavedBuild({ ...savedBuild, Deadline: formattedDeadline });
+                                } else {
+                                // Update the state if the deadline is valid
+                                setSavedBuild({ ...savedBuild, Deadline: e.target.value });
+                                }
+                            }}
+                            onChange={(e) => {
+                                // Allow typing and update the state without validation
+                                setSavedBuild({ ...savedBuild, Deadline: e.target.value });
+                            }}
+                            />
+                        </>
+                        
+                    :
+                        <></>
+                    }
+                </div>
 
             
             </div>
             <>
                 {
-                    (savedBuild['Seeding'] !== undefined && savedBuild['Seeding'] !== '') ?
+                    ((savedBuild['Deadline'] !== undefined && savedBuild['Deadline'] !== '') || (savedBuild['Format'] === 'print' && savedBuild['Seeding'] !== undefined && savedBuild['Seeding'])) ?
                         <>
                             
                             <SingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} currentBracketBuild={builtBracket} />

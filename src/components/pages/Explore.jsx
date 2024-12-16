@@ -1,5 +1,5 @@
 import React from 'react';
-import './subcomponents/FirebaseConfig';
+import '../subcomponents/FirebaseConfig';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let currentUser = '';

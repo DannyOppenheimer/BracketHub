@@ -27,8 +27,8 @@
 
     padding-right: 2.5vw;
     padding-left: 2.5vw;
-    padding-top: 0.5vw;
-    padding-bottom: 0.5vw;
+    padding-top: 0.3vw;
+    padding-bottom: 0.3vw;
 
     font-family: 'Raleway', sans-serif;
     background-color: #e23cc6;
@@ -36,10 +36,22 @@
     border-color: black;
     border-radius: 4px;
     box-shadow: 3px 3px #888888;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+
     
 }
 
-.sign_up_button:hover, .sign_up_button:visited .sign_up_button:active {
+.sign_up_button:hover {
     color: black;
     text-decoration: none;
+
+    transform: scale(1.04) !important;
+}
+
+.sign_up_button:active {
+    color: black;
+    text-decoration: none;
+
+    transform: scale(0.96) !important;
 }

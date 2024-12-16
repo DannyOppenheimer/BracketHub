@@ -43,58 +43,64 @@ const AuthFields = ({ title }) => {
         return () => unsubscribe();  // Clean up listener on unmount
     }, [auth]);
 
-    // Handle authentication based on the command
-    const handleAuthentication = (command) => {
-        const db = getFirestore(app);
+    const db = getFirestore(app);
+    
+    const resetInfoLabels = () => {
         setError('');
         setSuccess('');
+    }
 
-        if (command === 'Sign In') {
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    setCurrentUser(userCredential.user);
-                    setSuccess('Sign in successful.');
-                })
-                .catch((error) => {
-                    alert(error.code);
-                    setError(errorMessageMap[error.code] || 'An error occurred.');
-                });
-        } else if (command === 'Sign Up') {
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    user.displayName = username;
-                    setSuccess('Sign up successful. Please check your email for verification.');
-                    sendEmailVerification(user);
+    const handleSignin = () => {
+        resetInfoLabels();
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            setCurrentUser(userCredential.user);
+            setSuccess('Sign in successful.');
+        })
+        .catch((error) => {
+            alert(error.code);
+            setError(errorMessageMap[error.code] || 'An error occurred.');
+        });
+    }
+    const handleSignup = () => {
+        resetInfoLabels();
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            user.displayName = username;
+            setSuccess('Sign up successful. Please check your email for verification.');
+            sendEmailVerification(user);
 
-                   
-                    setDoc(doc(db, "Users", user.uid), {
-                        displayName: user.displayName,
-                        games: [],
-                    });
+        
+            setDoc(doc(db, "Users", user.uid), {
+                displayName: user.displayName,
+                games: [],
+            });
 
-                })
-                .catch((error) => {
-                    setError(errorMessageMap[error.code] || 'An error occurred.');
-                });
-        } else if (command === 'Google') {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    setCurrentUser(result.user);
-                    setSuccess('Sign in with Google successful.');
+        })
+        .catch((error) => {
+            setError(errorMessageMap[error.code] || 'An error occurred.');
+        });
+    }
+    const handleGoogleAuth = () => {
+        resetInfoLabels();
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            setCurrentUser(result.user);
+            setSuccess('Sign in with Google successful.');
 
-                    setDoc(doc(db, "Users", result.user.uid), {
-                        displayName: result.user.displayName,
-                        games: [],
-                    });
+            setDoc(doc(db, "Users", result.user.uid), {
+                displayName: result.user.displayName,
+                games: [],
+            });
 
-                })
-                .catch((error) => {
-                    setError(errorMessageMap[error.code] || 'An error occurred.');
-                });
-        }
-    };
+        })
+        .catch((error) => {
+            setError(errorMessageMap[error.code] || 'An error occurred.');
+        });
 
+    }
+  
     return (
         <div className={styles.container}>
             <div className={styles.already_signed_in}>
@@ -134,7 +140,7 @@ const AuthFields = ({ title }) => {
             />
 
             <button
-                onClick={() => handleAuthentication(title)}
+                onClick={() => (title === 'Sign Up' ? handleSignup() : handleSignin())}
                 className={styles.sub}
             >
                 Submit
@@ -143,7 +149,7 @@ const AuthFields = ({ title }) => {
             {success === '' && (
                 <div
                     className={styles.google_sign_up_field}
-                    onClick={() => handleAuthentication('Google')}
+                    onClick={() => handleGoogleAuth()}
                 >
                     <img
                         className={styles.google_logo}

@@ -13,8 +13,10 @@ import {
   Account,
   Signin,
   Signup,
+  GameView,
   Confirmation
-} from "./components";
+  
+} from "./components/pages";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -30,6 +32,7 @@ root.render(
       <Route path="/signin" element={<Signin />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/confirmation" element={<Confirmation />} />
+      <Route path="/gameview" element={<GameView />} />
     </Routes>
   </Router>
 );

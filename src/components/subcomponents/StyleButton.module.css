@@ -18,4 +18,15 @@
     box-shadow: 3px 3px #888888;
 
     border-radius: 4px;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+
+}
+
+.button:hover {
+    transform: scale(1.02);
+}
+
+.button:active {
+    transform: scale(0.98);
 }

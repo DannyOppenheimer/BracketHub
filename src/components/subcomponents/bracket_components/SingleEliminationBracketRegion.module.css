@@ -11,6 +11,7 @@
 
     overflow-y: hidden;
     overflow-x: scroll;
+    margin-bottom: 10px;
 }
 
 .column {

@@ -1,6 +1,6 @@
 import React from 'react'
-import AuthFields from './subcomponents/AuthFields';
-import './subcomponents/FirebaseConfig';
+import AuthFields from '../subcomponents/AuthFields';
+import '../subcomponents/FirebaseConfig';
 import styles from './Signin.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
