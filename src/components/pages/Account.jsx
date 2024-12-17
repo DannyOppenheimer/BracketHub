@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import StyleButton from '../subcomponents/StyleButton';
+import StyleButton from '../subcomponents/style_components/StyleButton';
 
 const Account = () => {
     const [currentUser, setCurrentUser] = useState(null);  // Manage user state
@@ -78,7 +78,7 @@ const Account = () => {
                                         onChange={(e) => setNewDisplayName(e.target.value)}
                                         className={styles.editInput}
                                     />
-                                    
+
                                     <button onClick={handleSave} className={styles.saveButton}>
                                         Save
                                     </button>

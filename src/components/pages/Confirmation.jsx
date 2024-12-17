@@ -5,7 +5,7 @@ const Confirmation = () => {
     const location = useLocation();
     const message = location.state?.message || 'No message provided';
 
-    return(
+    return (
         <p>{message}</p>
     )
 }

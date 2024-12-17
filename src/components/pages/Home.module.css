@@ -16,7 +16,7 @@
 
 .authentication_container {
     text-align: center;
-    
+
 }
 
 .sign_up_button {
@@ -39,7 +39,7 @@
 
     transition: background 0.3s ease, transform 0.2s ease;
 
-    
+
 }
 
 .sign_up_button:hover {

@@ -56,20 +56,21 @@
     padding-bottom: 2vh;
     padding-left: 2vw;
     padding-right: 2vw;
-    
+
 
     border: 3px solid lightgray;
 
     box-shadow: 5px 5px 5px lightgray;
     font-family: 'Raleway', sans-serif;
-    
+
 }
 
 .current_build .inter {
     border-bottom: 2px solid black;
 }
 
-.inter, .last {
+.inter,
+.last {
     padding-top: 1vh;
     padding-bottom: 1vh;
 }

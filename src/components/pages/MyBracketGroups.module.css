@@ -24,13 +24,14 @@
 }
 
 /* Loading and Not Signed In States */
-.loading, .notSignedIn {
+.loading,
+.notSignedIn {
     text-align: center;
     font-size: 1.2rem;
     color: black;
     margin-top: 2rem;
     font-family: 'Raleway', sans-serif;
-    
+
 }
 
 /* Table Styling */
@@ -78,7 +79,9 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .tableHeader th, .cell {
+
+    .tableHeader th,
+    .cell {
         font-size: 0.9rem;
         padding: 0.5rem;
     }

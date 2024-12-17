@@ -12,7 +12,7 @@ const Navigation = () => {
                 <li className={styles.header_item}><NavLink className={styles.header_button} to="/join-bracket">Join Bracket Group</NavLink></li>
                 <li className={styles.header_item}><NavLink className={styles.header_button} to="/bracket-groups">My Bracket Groups</NavLink></li>
                 <li className={styles.header_item}><NavLink className={styles.header_button} to="/explore">Explore</NavLink></li>
-                
+
                 <li className={styles.header_item_right}><NavLink className={styles.header_button} to="/Account"><img className={styles.account_image} alt='Account Icon' src={"https://cdn-icons-png.flaticon.com/512/748/748128.png"} /></NavLink></li>
             </ul>
         </div>

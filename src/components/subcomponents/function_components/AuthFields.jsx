@@ -1,13 +1,13 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './AuthFields.module.css';
 import PropTypes from 'prop-types';
-import './FirebaseConfig';
+import '../FirebaseConfig';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 
-import { app } from './FirebaseConfig';
-import { getFirestore, doc, setDoc } from "firebase/firestore"; 
+import { app } from '../FirebaseConfig';
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithPopup } from 'firebase/auth';
 
 const AuthFields = ({ title }) => {
@@ -44,7 +44,7 @@ const AuthFields = ({ title }) => {
     }, [auth]);
 
     const db = getFirestore(app);
-    
+
     const resetInfoLabels = () => {
         setError('');
         setSuccess('');
@@ -53,54 +53,102 @@ const AuthFields = ({ title }) => {
     const handleSignin = () => {
         resetInfoLabels();
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            setCurrentUser(userCredential.user);
-            setSuccess('Sign in successful.');
-        })
-        .catch((error) => {
-            alert(error.code);
-            setError(errorMessageMap[error.code] || 'An error occurred.');
-        });
+            .then((userCredential) => {
+                setCurrentUser(userCredential.user);
+                setSuccess('Sign in successful.');
+            })
+            .catch((error) => {
+                alert(error.code);
+                setError(errorMessageMap[error.code] || 'An error occurred.');
+            });
     }
     const handleSignup = () => {
         resetInfoLabels();
         createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            user.displayName = username;
-            setSuccess('Sign up successful. Please check your email for verification.');
-            sendEmailVerification(user);
+            .then((userCredential) => {
+                const user = userCredential.user;
+                user.displayName = username;
+                setSuccess('Sign up successful. Please check your email for verification.');
+                sendEmailVerification(user);
 
-        
-            setDoc(doc(db, "Users", user.uid), {
-                displayName: user.displayName,
-                games: [],
+
+                setDoc(doc(db, "Users", user.uid), {
+                    displayName: user.displayName,
+                    games: [],
+                    lifetimePoints: 0,
+                    rank: "Copper",
+                    gamesPlayed: 0,
+                    picksMade: 0,
+                    perfectGames: 0,
+                    wins: 0,
+                    lastPlaces: 0,
+                    verified: false,
+                    owner: false,
+                    vip: false,
+                    pro: false,
+                    flexstring1: "",
+                    flexstring2: "",
+                    flexint1: 0,
+                    flexint2: 0,
+                    flexint3: 0,
+                    flexint4: 0,
+                    flexbool1: false,
+                    flexbool2: false,
+                    flexbool3: false,
+                    flexbool4: false,
+                    flexfloat1: 0.1,
+                    flexfloat2: 0.1,
+                    flexfloat3: 0.1,
+                });
+
+            })
+            .catch((error) => {
+                setError(errorMessageMap[error.code] || 'An error occurred.');
             });
-
-        })
-        .catch((error) => {
-            setError(errorMessageMap[error.code] || 'An error occurred.');
-        });
     }
     const handleGoogleAuth = () => {
         resetInfoLabels();
         signInWithPopup(auth, provider)
-        .then((result) => {
-            setCurrentUser(result.user);
-            setSuccess('Sign in with Google successful.');
+            .then((result) => {
+                setCurrentUser(result.user);
+                setSuccess('Sign in with Google successful.');
 
-            setDoc(doc(db, "Users", result.user.uid), {
-                displayName: result.user.displayName,
-                games: [],
+                setDoc(doc(db, "Users", result.user.uid), {
+                    displayName: result.user.displayName,
+                    games: [],
+                    lifetimePoints: 0,
+                    rank: "Copper",
+                    gamesPlayed: 0,
+                    picksMade: 0,
+                    perfectGames: 0,
+                    wins: 0,
+                    lastPlaces: 0,
+                    verified: false,
+                    owner: false,
+                    vip: false,
+                    pro: false,
+                    flexstring1: "",
+                    flexstring2: "",
+                    flexint1: 0,
+                    flexint2: 0,
+                    flexint3: 0,
+                    flexint4: 0,
+                    flexbool1: false,
+                    flexbool2: false,
+                    flexbool3: false,
+                    flexbool4: false,
+                    flexfloat1: 0.1,
+                    flexfloat2: 0.1,
+                    flexfloat3: 0.1,
+                });
+
+            })
+            .catch((error) => {
+                setError(errorMessageMap[error.code] || 'An error occurred.');
             });
 
-        })
-        .catch((error) => {
-            setError(errorMessageMap[error.code] || 'An error occurred.');
-        });
-
     }
-  
+
     return (
         <div className={styles.container}>
             <div className={styles.already_signed_in}>

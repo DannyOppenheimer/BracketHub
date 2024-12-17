@@ -22,16 +22,28 @@
     flex-direction: column;
     justify-content: space-evenly;
 
+
+
+
+
 }
 
 .inlineConnecter {
     flex-grow: 1;
-}
-
-.inlineConnecter {
     display: flex;
     align-items: center;
+
+
+
 }
+
+.inlineConnecterRight {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
 
 .connector {
     width: 30px;
@@ -40,15 +52,18 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    
+
     flex-grow: 1;
 
     overflow: hidden;
 
-    
+
 }
 
-.connectorLTop, .connectorLBot, .connectorRTop, .connectorRBot {
+.connectorLTop,
+.connectorLBot,
+.connectorRTop,
+.connectorRBot {
     width: 25px;
     display: flex;
     flex-direction: row;
@@ -58,7 +73,10 @@
 
 }
 
-.connectorLTop:before, .connectorLTop:after, .connectorLBot:before, .connectorLBot:after {
+.connectorLTop:before,
+.connectorLTop:after,
+.connectorLBot:before,
+.connectorLBot:after {
     content: "";
     flex: 1 1;
     border-bottom: 4px solid #000;
@@ -74,16 +92,58 @@
 
     height: 50%;
     align-self: flex-end;
-    
+
 }
 
 .connectorRBot {
 
-    border-top: 2px solid #000; 
-
+    border-top: 2px solid #000;
     border-left: 4px solid black;
-    
     height: 50%;
+}
 
-    
+
+
+/*Reverse!!*/
+
+.connectorLTopReverse,
+.connectorLBotReverse,
+.connectorRTopReverse,
+.connectorRBotReverse {
+    width: 25px;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+
+    margin-right: -4px;
+
+}
+
+.connectorLTopReverse:before,
+.connectorLTopReverse:after,
+.connectorLBotReverse:before,
+.connectorLBotReverse:after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 4px solid #000;
+    margin: auto;
+
+}
+
+.connectorRTopReverse {
+
+    border-bottom: 2px solid #000;
+
+    border-right: 4px solid black;
+
+    height: 50%;
+    align-self: flex-end;
+
+}
+
+.connectorRBotReverse {
+
+    border-top: 2px solid #000;
+    border-right: 4px solid black;
+    height: 50%;
 }

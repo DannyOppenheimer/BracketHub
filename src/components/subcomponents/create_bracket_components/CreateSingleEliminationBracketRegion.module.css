@@ -1,0 +1,95 @@
+.container {
+
+    width: 95%;
+    text-align: center;
+    margin: 0 auto;
+
+    /* This flex display is on the overall bracket. It will show the columns of each round */
+    display: flex;
+    flex-direction: row-reverse;
+    direction: ltr;
+
+    overflow-y: hidden;
+    overflow-x: scroll;
+    margin-bottom: 10px;
+}
+
+.column {
+    margin: 0 auto;
+    flex-grow: 0.5;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+}
+
+.inlineConnecter {
+    flex-grow: 1;
+}
+
+.inlineConnecter {
+    display: flex;
+    align-items: center;
+}
+
+.connector {
+    width: 30px;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    flex-grow: 1;
+
+    overflow: hidden;
+
+
+}
+
+.connectorLTop,
+.connectorLBot,
+.connectorRTop,
+.connectorRBot {
+    width: 25px;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+
+    margin-right: -4px;
+
+}
+
+.connectorLTop:before,
+.connectorLTop:after,
+.connectorLBot:before,
+.connectorLBot:after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 4px solid #000;
+    margin: auto;
+
+}
+
+.connectorRTop {
+
+    border-bottom: 2px solid #000;
+
+    border-left: 4px solid black;
+
+    height: 50%;
+    align-self: flex-end;
+
+}
+
+.connectorRBot {
+
+    border-top: 2px solid #000;
+
+    border-left: 4px solid black;
+
+    height: 50%;
+
+
+}

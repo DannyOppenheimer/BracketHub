@@ -49,6 +49,9 @@
 
     max-width: 300px;
     text-align: center;
+
+    font-family: 'Raleway', sans-serif;
+
 }
 
 .codeInput:focus {

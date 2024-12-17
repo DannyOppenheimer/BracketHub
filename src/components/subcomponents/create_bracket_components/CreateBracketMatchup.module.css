@@ -1,0 +1,83 @@
+.matchup {
+    font-family: 'Raleway', sans-serif;
+
+    display: flex;
+    flex-direction: column;
+
+    list-style: none;
+
+    min-width: 200px;
+    border-radius: 5px;
+    border: 2px solid #f79ae7;
+    background-color: #f79ae7;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+}
+
+
+
+.team {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+
+    margin-left: -25px;
+}
+
+.team_input {
+    border: none;
+    outline: none;
+    margin: 0 auto;
+    padding-left: 1vw;
+
+    background-color: #f79ae7;
+    color: white;
+
+}
+
+.team_input::placeholder {
+    color: #f1d2ec;
+}
+
+.seed_num {
+    min-width: 30px;
+    margin: 0 auto;
+    border-right: 2px solid white;
+
+    color: white
+}
+
+.lower_line {
+    border-bottom: 2px solid white;
+    margin-left: 3px;
+}
+
+.inactive_matchup .matchup {
+    background-color: #FCCDF3;
+    border: 2px solid #FCCDF3;
+}
+
+.inactive_matchup .team {
+    background-color: rgb(247, 154, 231, 50);
+}
+
+.inactive_matchup .team_input {
+    background-color: rgb(255, 255, 255, 0.5) !important;
+}
+
+.inactive_matchup .lower_line {
+    border-bottom: 2px solid rgb(247, 154, 231, 0) !important;
+    margin-left: 3px;
+}
+
+.inactive_matchup .seed_num {
+    min-width: 30px;
+    margin: 0 auto;
+    border-right: 2px solid rgb(247, 154, 231, 0);
+    background-color: #FCCDF3 !important;
+    color: rgb(247, 154, 231, 0);
+}

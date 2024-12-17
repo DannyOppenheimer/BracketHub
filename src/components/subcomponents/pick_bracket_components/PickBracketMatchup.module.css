@@ -1,13 +1,12 @@
-
-
 .matchup {
+
     font-family: 'Raleway', sans-serif;
 
     display: flex;
     flex-direction: column;
 
     list-style: none;
-    
+
     min-width: 200px;
     border-radius: 5px;
     border: 2px solid #f79ae7;
@@ -26,7 +25,7 @@
     display: flex;
     flex-direction: row;
     margin: 0 auto;
-    
+
     margin-left: -25px;
 }
 
@@ -62,9 +61,11 @@
     background-color: #FCCDF3;
     border: 2px solid #FCCDF3;
 }
+
 .inactive_matchup .team {
     background-color: rgb(247, 154, 231, 50);
 }
+
 .inactive_matchup .team_input {
     background-color: rgb(255, 255, 255, 0.5) !important;
 }
@@ -73,10 +74,32 @@
     border-bottom: 2px solid rgb(247, 154, 231, 0) !important;
     margin-left: 3px;
 }
+
 .inactive_matchup .seed_num {
     min-width: 30px;
     margin: 0 auto;
     border-right: 2px solid rgb(247, 154, 231, 0);
-    background-color: #FCCDF3!important;
+    background-color: #FCCDF3 !important;
     color: rgb(247, 154, 231, 0);
+}
+
+
+
+.team_input {
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    ;
+    border-radius: 3px;
+
+}
+
+.team_input:hover {
+    transform: scale(1.03) !important;
+    transform-origin: right;
+}
+
+
+.selected {
+    box-shadow: inset 0 0 0 4px #4e2b93;
+
 }
