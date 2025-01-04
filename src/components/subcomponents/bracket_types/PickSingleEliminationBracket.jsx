@@ -5,10 +5,16 @@ import SingleEliminationBracket from '../single_elim_bracket/SingleEliminationBr
 
 const PickSingleEliminationBracket = ({ buildData, bracket, updateBracketFunc }) => {
 
+    const handlePicks = (event, team, round, matchup, numRounds) => {
+
+        updateBracketFunc(event, event.target.value, team, round, matchup, numRounds);
+
+    };
+
     return (
         <SingleEliminationBracket buildData={buildData} bracket={bracket}>
-            <input className={matchupStyles.team_input_radio} type='radio' onChange={updateBracketFunc} ></input>
-            <input className={matchupStyles.team_input_radio} type='radio' onChange={updateBracketFunc} ></input>
+            <input className={matchupStyles.team_input_radio} type='radio' onChange={handlePicks} ></input>
+            <input className={matchupStyles.team_input_radio} type='radio' onChange={handlePicks} ></input>
         </SingleEliminationBracket>
     )
 }

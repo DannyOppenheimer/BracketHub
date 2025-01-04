@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './BracketMatchup.module.css';
 import PropTypes from 'prop-types';
 
 const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchup, bracket }) => {
+
+
 
     const enhancedChildren = React.Children.map(children, (child, index) => {
         if (React.isValidElement(child) && child.type === 'input') {
@@ -24,15 +26,26 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchu
                         : bracket[round][matchup]['team2name'];
 
                 return (
-                    <label key={index}>
-                        {React.cloneElement(child, {
-                            value: value,
-                            name: `round-${round}-matchup-${matchup}`,
-                            onChange: (event) =>
-                                originalOnChange(event, index + 1, round, matchup),
-                        })}
-                        <span className={styles.radio_text}>{value}</span>
-                    </label>
+                    <>
+                        <div className={styles.radio_outer_div}>
+                            <label key={index} className={styles.radio_container}>
+                                {React.cloneElement(child, {
+                                    value: value,
+                                    name: `round-${round}-matchup-${matchup}`,
+                                    checked: bracket[round][matchup]['teamselected'] === index + 1,
+                                    onChange: (event) =>
+                                        originalOnChange(event, index + 1, round, matchup, Object.keys(bracket).length),
+
+                                })}
+                                <span className={styles.radio_text}>{value}</span>
+                            </label>
+                        </div>
+
+                    </>
+
+
+
+
                 );
             }
 

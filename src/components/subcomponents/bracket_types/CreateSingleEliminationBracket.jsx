@@ -72,6 +72,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
         }
 
         setBracket(copyBracket); // Replace state
+
     };
 
     // If only 1 team is present in a matchup, label it correctly
@@ -186,7 +187,6 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     const handleInputChange = (event, team, round, matchup) => {
 
         updateBracket(round, matchup, `team${team}name`, event.target.value);
-        console.log(bracket);
         updateBracketFunc(bracket);
 
     };

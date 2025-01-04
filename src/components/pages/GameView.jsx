@@ -89,8 +89,51 @@ const GameView = () => {
         fetchGamePlayers();
     }, [gameID, db]);
 
-    const recievePicks = (e) => {
-        console.log("Hey!");
+    const updateBracket = (round, matchup, key, value) => {
+        setBracket((prevBracket) => {
+
+            const copyBracket = JSON.parse(JSON.stringify(prevBracket));
+
+            // console.log(
+            //     `Updating at round ${round}, matchup ${matchup}, key ${key}, with value ${value}`
+            // );
+
+            if (value === "SEARCH_AND_DELETE") {
+
+                if (copyBracket[round][matchup]['team1name'] == key) {
+                    copyBracket[round][matchup]['team1name'] = null;
+                    copyBracket[round][matchup]['team1'] = null;
+                } else {
+                    copyBracket[round][matchup]['team2name'] = null;
+                    copyBracket[round][matchup]['team2'] = null;
+                }
+
+            } else {
+                copyBracket[round][matchup][key] = value;
+            }
+
+
+            return copyBracket; // Return the updated state
+        });
+    };
+
+    const recievePicks = (event, teamName, team, round, matchup, numRounds) => {
+
+        updateBracket(round, matchup, 'teamselected', team);
+        let count = 1;
+        for (let i = round - 1; i > 0; i--) {
+
+
+            if (i === round - 1) {
+                updateBracket(i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}`, bracket[round][matchup][`team${team}`]);
+                updateBracket(i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}name`, bracket[round][matchup][`team${team}name`]);
+            } else {
+                updateBracket(i, Math.ceil(matchup / (2 ** count)), bracket[round][matchup][`team${bracket[round][matchup]['teamselected']}name`], "SEARCH_AND_DELETE");
+            }
+            count++;
+        }
+
+
     }
 
     if (!gameID) {

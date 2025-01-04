@@ -29,7 +29,6 @@
 
     margin-left: -25px;
 
-
 }
 
 
@@ -37,10 +36,12 @@
     border: none;
     outline: none;
     margin: 0 auto;
-    padding-left: 1vw;
+    padding-left: 20px;
 
     background-color: #f79ae7;
     color: white;
+
+    height: 33px;
 
 }
 
@@ -87,15 +88,26 @@
     color: rgb(247, 154, 231, 0);
 }
 
+.radio_container {
+    width: 0px;
+
+    text-wrap: nowrap;
+    transform: translateX(-100px);
+
+    height: 25px;
+
+}
+
+.radio_outer_div {
+    width: 203px;
+}
 
 .team_input_radio {
-
     appearance: none;
 
 }
 
 .team_input_radio::before {
-
     margin: 0;
 
     margin-right: 12px;
@@ -128,7 +140,7 @@
 
 
 .radio_text {
-    font-size: 16px;
+
     color: white;
 
     transition: color 0.3s ease;
