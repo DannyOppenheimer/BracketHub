@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "bracketplexus"
-  }
+  },
+  "targets": {
+    "bracketplexus": {
+      "hosting": {
+        "default": [
+          "bracketplexus"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

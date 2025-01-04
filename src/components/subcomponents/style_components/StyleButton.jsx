@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './StyleButton.module.css'
 import PropTypes from 'prop-types';
 
-const StyleButton = ({ text, clicked }) => {
+const StyleButton = ({ text, clicked, disabled }) => {
     return (
-        <button className={styles.button} onClick={clicked}>{text}</button>
+        <button className={styles.button} onClick={clicked} disabled={disabled}>{text}</button>
     )
 }
 

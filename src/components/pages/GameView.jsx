@@ -5,7 +5,7 @@ import styles from './GameView.module.css';
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../subcomponents/FirebaseConfig';
-import PickSingleEliminationBracket from '../subcomponents/pick_bracket_components/PickSingleEliminationBracket';
+import PickSingleEliminationBracket from '../subcomponents/bracket_types/PickSingleEliminationBracket';
 
 const GameView = () => {
     const location = useLocation();
@@ -14,7 +14,7 @@ const GameView = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [builtBracket, setBuiltBracket] = useState(null);
+    const [bracket, setBracket] = useState(null);
     const [savedBuild, setSavedBuild] = useState(null);
     const [savedPicks, setSavedPicks] = useState(null);
 
@@ -54,9 +54,8 @@ const GameView = () => {
                     Deadline: gameData.deadline
                 });
 
-                console.log(savedBuild);
 
-                setBuiltBracket(gameData.teamNames);
+                setBracket(gameData.bracket);
 
 
                 if (gameSnap.exists()) {
@@ -90,6 +89,10 @@ const GameView = () => {
         fetchGamePlayers();
     }, [gameID, db]);
 
+    const recievePicks = (e) => {
+        console.log("Hey!");
+    }
+
     if (!gameID) {
         return <p className={styles.error}>No game selected. Please try again.</p>;
     }
@@ -101,8 +104,9 @@ const GameView = () => {
     return (
         <>
             <div>
-                <PickSingleEliminationBracket data={savedBuild} sendBracketUp={setSavedPicks} currentBracketBuild={builtBracket} />
+                <PickSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recievePicks} />
             </div>
+
             <div className={styles.container}>
                 <h1 className={styles.title}>Game Players</h1>
                 {currentUser ? (

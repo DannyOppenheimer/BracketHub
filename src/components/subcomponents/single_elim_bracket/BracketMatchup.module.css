@@ -1,5 +1,4 @@
 .matchup {
-
     font-family: 'Raleway', sans-serif;
 
     display: flex;
@@ -25,9 +24,14 @@
     display: flex;
     flex-direction: row;
     margin: 0 auto;
+    cursor: pointer;
+
 
     margin-left: -25px;
+
+
 }
+
 
 .team_input {
     border: none;
@@ -84,22 +88,55 @@
 }
 
 
+.team_input_radio {
 
-.team_input {
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-    ;
-    border-radius: 3px;
+    appearance: none;
 
 }
 
-.team_input:hover {
-    transform: scale(1.03) !important;
-    transform-origin: right;
+.team_input_radio::before {
+
+    margin: 0;
+
+    margin-right: 12px;
+    margin-left: 12px;
+    border-radius: 1px;
+
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #732f6e;
+
+    border-radius: 50%;
+
+    background-color: #fff;
+    transition: all 0.3s ease;
+
+
+    transform: translateY(6px);
+
+
+}
+
+.team_input_radio:checked::before {
+    background-color: #8b3886;
+    border-color: #732f6e;
+
+
 }
 
 
-.selected {
-    box-shadow: inset 0 0 0 4px #4e2b93;
+.radio_text {
+    font-size: 16px;
+    color: white;
+
+    transition: color 0.3s ease;
+
+    display: inline-block;
+
+    position: relative;
+
+    top: 3px;
 
 }

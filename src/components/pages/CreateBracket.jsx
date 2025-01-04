@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import StyleButton from '../subcomponents/style_components/StyleButton';
 import { app } from '../subcomponents/FirebaseConfig';
 import styles from './CreateBracket.module.css';
-import CreateSingleEliminationBracket from '../subcomponents/create_bracket_components/CreateSingleEliminationBracket';
+import CreateSingleEliminationBracket from '../subcomponents/bracket_types/CreateSingleEliminationBracket.jsx';
+import SingleEliminationBracket from '../subcomponents/single_elim_bracket/SingleEliminationBracket';
+
 import SubtitleWithInfo from '../subcomponents/style_components/SubtitleWithInfo';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
@@ -27,9 +29,15 @@ const CreateBracket = () => {
     // JS Object containing the actual GENERATED BRACKET based on the config settings
     const [builtBracket, setBuiltBracket] = useState('');
 
+    const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(false);
+
+
     const navigate = useNavigate();
 
     const submit = async () => {
+
+        setIsSubmitButtonDisabled(true);
+
         confetti({
             particleCount: 150,
             spread: 150, // Spread the confetti particles
@@ -50,7 +58,7 @@ const CreateBracket = () => {
                 regionNum: savedBuild['Regions'],
                 host: host.uid,
                 players: [host.uid],
-                teamNames: builtBracket,
+                bracket: builtBracket,
                 perRegion: savedBuild['Participants Per Region'],
                 numRegions: savedBuild['Regions'],
                 seeded: savedBuild['Seeding'],
@@ -248,9 +256,10 @@ const CreateBracket = () => {
                     ((savedBuild['Deadline'] !== undefined && savedBuild['Deadline'] !== '') || (savedBuild['Format'] === 'print' && savedBuild['Seeding'] !== undefined && savedBuild['Seeding'])) ?
                         <>
 
-                            <CreateSingleEliminationBracket data={savedBuild} sendBracketUp={setBuiltBracket} currentBracketBuild={builtBracket} />
+                            <CreateSingleEliminationBracket buildData={savedBuild} updateBracketFunc={setBuiltBracket} />
+
                             <div className={styles.submit_button}>
-                                <StyleButton clicked={() => submit()} text='Submit Bracket' />
+                                <StyleButton clicked={() => submit()} text='Submit Bracket' disabled={isSubmitButtonDisabled} />
                             </div>
                         </>
                         :
