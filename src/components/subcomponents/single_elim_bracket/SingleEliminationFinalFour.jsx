@@ -1,15 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import BracketMatchup_BLANK from './BracketMatchup_BLANK';
 import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
 
-const SingleEliminationFinalFour = ({buildData, bracket, children}) => {
+const SingleEliminationFinalFour = ({ buildData, bracket, children, semiside }) => {
 
+    console.log(bracket);
+    console.log(bracket['semis']);
+    console.log(semiside)
     return (
         <>
-            <BracketMatchup_INACTIVE />
+            {bracket['semis'][semiside].team1name === null && bracket['semis'][semiside].team2name === null ? <BracketMatchup_INACTIVE /> : <BracketMatchup_BLANK seedingOn={buildData['Seeding']} seed1={bracket['finals'].team1} seed2={bracket['finals'].team2} region={'semis'} round={'semis'} matchup={semiside} bracket={bracket} buildData={buildData}>{children}</BracketMatchup_BLANK>}
         </>
     );
-       
+
 
 }
 

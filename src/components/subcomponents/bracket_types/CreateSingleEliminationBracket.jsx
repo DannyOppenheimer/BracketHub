@@ -120,39 +120,32 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     // Initialize an empty bracket with settings at null or false.
     useEffect(() => {
         let initialBracket = {};
+
+        let blankMatchup = {
+            team1: null,
+            team2: null,
+            team1Score: null,
+            team2Score: null,
+            team1name: null,
+            team2name: null,
+            teamselected: null,
+            editable: false,
+            showScores: false,
+            showWinner: false,
+            showSelection: false,
+            soloTeam: false,
+            won: false,
+        };
+
+        initialBracket['finals'] = blankMatchup;
+        initialBracket['semis'] = {};
+        initialBracket['semis']['left'] = blankMatchup;
+        initialBracket['semis']['right'] = blankMatchup;
+        
+        
         for (let h = 1; h <= numRegions; h++) {
             initialBracket[h] = {}
             
-            let special_matchups = ['finals']
-            if(numRegions === 2) {
-                initialBracket['finals'] = {}
-
-            }
-            if(numRegions === 4) {
-                initialBracket['finals'] = {}
-                initialBracket['semi-finals-left'] = {}
-                initialBracket['semi-finals-right'] = {}
-                special_matchups.push('semi-finals-left')
-                special_matchups.push('semi-finals-right')
-            }
-
-            for (let label of special_matchups) {
-                initialBracket[label] = {
-                    team1: null,
-                    team2: null,
-                    team1Score: null,
-                    team2Score: null,
-                    team1name: null,
-                    team2name: null,
-                    teamselected: null,
-                    editable: false,
-                    showScores: false,
-                    showWinner: false,
-                    showSelection: false,
-                    soloTeam: false,
-                    won: false,
-                };
-            }
 
             for (let i = 1; i <= numRounds; i++) {
                 initialBracket[h][i] = {};
@@ -175,21 +168,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
                             won: false,
                         };
                     } else {
-                        initialBracket[h][i][j] = {
-                            team1: null,
-                            team2: null,
-                            team1Score: null,
-                            team2Score: null,
-                            team1name: null,
-                            team2name: null,
-                            teamselected: null,
-                            editable: false,
-                            showScores: false,
-                            showWinner: false,
-                            showSelection: false,
-                            soloTeam: false,
-                            won: false,
-                        };
+                        initialBracket[h][i][j] = blankMatchup
                     }
                 }
 

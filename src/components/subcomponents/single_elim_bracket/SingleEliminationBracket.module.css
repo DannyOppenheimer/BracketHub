@@ -11,13 +11,26 @@
 
     display: grid;
     /* Enable grid layout */
-    grid-template-columns: 1fr 1fr 1fr;
     /* Define 2 equal-width columns */
-    grid-template-rows: 1fr 1fr;
-    /* Define 2 equal-height rows */
-    gap: 10px;
-    /* Optional: Spacing between grid items */
 
+    gap: 10px;
+
+}
+
+.grid_3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid_4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grid_5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.grid_6 {
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .finals {
@@ -26,4 +39,8 @@
     justify-content: center;
     height: 100%;
     margin-top: -5px;
+}
+
+.finals_4 {
+    margin-top: 170px;
 }
