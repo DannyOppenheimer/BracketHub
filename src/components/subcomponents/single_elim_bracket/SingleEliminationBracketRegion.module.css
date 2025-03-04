@@ -1,6 +1,8 @@
 .container {
 
-    width: 95%;
+    width: 98%;
+    box-sizing: border-box;
+
     text-align: center;
     margin: 0 auto;
 
@@ -9,9 +11,12 @@
     flex-direction: row-reverse;
     direction: ltr;
 
+
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: hidden;
     margin-bottom: 10px;
+
+    margin-left: 20px;
 }
 
 .column {
@@ -22,16 +27,17 @@
     flex-direction: column;
     justify-content: space-evenly;
 
+
+
 }
 
 .inlineConnecter {
     flex-grow: 1;
-}
-
-.inlineConnecter {
     display: flex;
     align-items: center;
+
 }
+
 
 .connector {
     width: 30px;
@@ -92,4 +98,39 @@
     height: 50%;
 
 
+}
+
+/*Reverse!!*/
+.connectorLTopReverse,
+.connectorLBotReverse,
+.connectorRTopReverse,
+.connectorRBotReverse {
+    width: 25px;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    margin-right: -4px;
+}
+
+.connectorLTopReverse:before,
+.connectorLTopReverse:after,
+.connectorLBotReverse:before,
+.connectorLBotReverse:after {
+    content: "";
+    flex: 1 1;
+    border-bottom: 4px solid #000;
+    margin: auto;
+}
+
+.connectorRTopReverse {
+    border-bottom: 2px solid #000;
+    border-right: 4px solid black;
+    height: 50%;
+    align-self: flex-end;
+}
+
+.connectorRBotReverse {
+    border-top: 2px solid #000;
+    border-right: 4px solid black;
+    height: 50%;
 }

@@ -6,6 +6,24 @@
     box-shadow: 5px 5px 5px lightgray;
     border: 3px solid lightgray;
 
-    overflow: hidden;
 
+    overflow: auto;
+
+    display: grid;
+    /* Enable grid layout */
+    grid-template-columns: 1fr 1fr 1fr;
+    /* Define 2 equal-width columns */
+    grid-template-rows: 1fr 1fr;
+    /* Define 2 equal-height rows */
+    gap: 10px;
+    /* Optional: Spacing between grid items */
+
+}
+
+.finals {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-top: -5px;
 }

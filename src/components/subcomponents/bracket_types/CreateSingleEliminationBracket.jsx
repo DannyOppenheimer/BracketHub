@@ -56,19 +56,21 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     // easy to access user preference
     const seedingOn = buildData['Seeding'] === 'on' ? true : false;
     const numTeams = buildData['Participants Per Region'];
-    const numRounds = Math.ceil(getBaseLog(2, numTeams))
+    const numRegions = buildData['Regions'];
+    const numRounds = Math.ceil(getBaseLog(2, numTeams));
+    console.log(numRounds + " -numrounds");
 
     let [bracket, setBracket] = useState({});
 
-    const updateBracket = (round, matchup, key, value) => {
+    const updateBracket = (region, round, matchup, key, value) => {
         const copyBracket = JSON.parse(JSON.stringify(bracket)); // Deep copy
 
         if (key === "FIRST_LEVEL") {
-            bracket[round] = {}
+            bracket[region][round] = {}
         } else if (key === "NO_KEY") {
-            copyBracket[round][matchup] = value;
+            copyBracket[region][round][matchup] = value;
         } else {
-            copyBracket[round][matchup][key] = value;
+            copyBracket[region][round][matchup][key] = value;
         }
 
         setBracket(copyBracket); // Replace state
@@ -76,117 +78,174 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     };
 
     // If only 1 team is present in a matchup, label it correctly
-    const setSoloTeam = (round, matchup) => {
+    const setSoloTeam = (bracketObj, region, round, matchup) => {
 
-        if (bracket[round][matchup].team1 === null && bracket[round][matchup].team2 !== null) {
-            updateBracket(round, matchup, 'soloTeam', true);
-        } else if (bracket[round][matchup].team2 === null && bracket[round][matchup].team1 !== null) {
-            updateBracket(round, matchup, 'soloTeam', true);
-        } else if (bracket[round][matchup].team2 !== null && bracket[round][matchup].team1 !== null) {
-            updateBracket(round, matchup, 'soloTeam', false);
-        } else if (bracket[round][matchup].team2 === null && bracket[round][matchup].team1 === null) {
-            updateBracket(round, matchup, 'soloTeam', false);
+        if (bracketObj[region][round][matchup].team1 === null && bracketObj[region][round][matchup].team2 !== null) {
+            bracketObj[region][round][matchup].soloTeam = true;
+        } else if (bracketObj[region][round][matchup].team2 === null && bracketObj[region][round][matchup].team1 !== null) {
+            bracketObj[region][round][matchup].soloTeam = true;
+        } else if (bracketObj[region][round][matchup].team2 !== null && bracketObj[region][round][matchup].team1 !== null) {
+            bracketObj[region][round][matchup].soloTeam = false;
+        } else if (bracketObj[region][round][matchup].team2 === null && bracketObj[region][round][matchup].team1 === null) {
+            bracketObj[region][round][matchup].soloTeam = false;
         }
+
+        return bracketObj;
     }
 
     // make sure that teams recieving a by-week are placed correctly between "team1" and "team2"
     // for example, when there are 6 teams, seed 1 would be on the top of the 2nd round, while seed 2 would be at the very bottom
-    const checkTeamTopBottom = () => {
-        for (let i = 1; i <= numRounds; i++) {
-            let currentRound = bracket[i];
-            for (let j = 1; j <= Object.keys(currentRound).length; j++) {
+    const checkTeamTopBottom = (bracketObj) => {
 
-                // boolean checks to carry out team switch
-                let isTeamSolo = bracket[i][j].soloTeam;
-                let isMatchupNumEven = j % 2 === 0;
-                let isTeamInTeam1 = bracket[i][j].team1 !== null;
+        for (let h = 1; h <= numRegions; h++) {
+            for (let i = 1; i <= numRounds; i++) {
+                let currentRound = bracketObj[h][i];
+                for (let j = 1; j <= Object.keys(currentRound).length; j++) {
 
-                if (isTeamSolo && isMatchupNumEven && isTeamInTeam1) {
-                    updateBracket(i, j, 'team2', bracket[i][j].team1);
-                    updateBracket(i, j, 'team1', null);
+                    // boolean checks to carry out team switch
+                    let isTeamSolo = bracketObj[h][i][j].soloTeam;
+                    let isMatchupNumEven = j % 2 === 0;
+                    let isTeamInTeam1 = bracketObj[h][i][j].team1 !== null;
+
+                    if (isTeamSolo && isMatchupNumEven && isTeamInTeam1) {
+                        bracketObj[h][i][j].team2 = bracketObj[h][i][j].team1
+                        bracketObj[h][i][j].team1 = null;
+                    }
                 }
             }
         }
+        return bracketObj;
     }
 
     // Initialize an empty bracket with settings at null or false.
     useEffect(() => {
-        const initialBracket = {};
+        let initialBracket = {};
+        for (let h = 1; h <= numRegions; h++) {
+            initialBracket[h] = {}
+            
+            let special_matchups = ['finals']
+            if(numRegions === 2) {
+                initialBracket['finals'] = {}
 
-        for (let i = 1; i <= numRounds; i++) {
-            initialBracket[i] = {};
+            }
+            if(numRegions === 4) {
+                initialBracket['finals'] = {}
+                initialBracket['semi-finals-left'] = {}
+                initialBracket['semi-finals-right'] = {}
+                special_matchups.push('semi-finals-left')
+                special_matchups.push('semi-finals-right')
+            }
 
-            for (let j = 1; j <= (2 ** i) / 2; j++) {
-                if (i === numRounds) {
-                    initialBracket[i][j] = {
-                        team1: prefabs[2 ** numRounds][(j - 1) * 2],
-                        team2: prefabs[2 ** numRounds][(j - 1) * 2 + 1],
-                        team1Score: null,
-                        team2Score: null,
-                        team1name: null,
-                        team2name: null,
-                        teamselected: null,
-                        editable: false,
-                        showScores: false,
-                        showWinner: false,
-                        showSelection: false,
-                        soloTeam: false,
-                        won: false,
-                    };
-                } else {
-                    initialBracket[i][j] = {
-                        team1: null,
-                        team2: null,
-                        team1Score: null,
-                        team2Score: null,
-                        team1name: null,
-                        team2name: null,
-                        teamselected: null,
-                        editable: false,
-                        showScores: false,
-                        showWinner: false,
-                        showSelection: false,
-                        soloTeam: false,
-                        won: false,
-                    };
+            for (let label of special_matchups) {
+                initialBracket[label] = {
+                    team1: null,
+                    team2: null,
+                    team1Score: null,
+                    team2Score: null,
+                    team1name: null,
+                    team2name: null,
+                    teamselected: null,
+                    editable: false,
+                    showScores: false,
+                    showWinner: false,
+                    showSelection: false,
+                    soloTeam: false,
+                    won: false,
+                };
+            }
+
+            for (let i = 1; i <= numRounds; i++) {
+                initialBracket[h][i] = {};
+
+                for (let j = 1; j <= (2 ** i) / 2; j++) {
+                    if (i === numRounds) {
+                        initialBracket[h][i][j] = {
+                            team1: prefabs[2 ** numRounds][(j - 1) * 2],
+                            team2: prefabs[2 ** numRounds][(j - 1) * 2 + 1],
+                            team1Score: null,
+                            team2Score: null,
+                            team1name: null,
+                            team2name: null,
+                            teamselected: null,
+                            editable: false,
+                            showScores: false,
+                            showWinner: false,
+                            showSelection: false,
+                            soloTeam: false,
+                            won: false,
+                        };
+                    } else {
+                        initialBracket[h][i][j] = {
+                            team1: null,
+                            team2: null,
+                            team1Score: null,
+                            team2Score: null,
+                            team1name: null,
+                            team2name: null,
+                            teamselected: null,
+                            editable: false,
+                            showScores: false,
+                            showWinner: false,
+                            showSelection: false,
+                            soloTeam: false,
+                            won: false,
+                        };
+                    }
                 }
+
+            }
+
+        }
+        console.log(bracket);
+
+        for (let i = 1; i <= numRegions; i++) {
+
+            // Propogate through bracket started in the finals round to correctly create bye-weeks and seeding
+
+            let lowestSeedInfo = lowestSeededTeamAndMatchup(initialBracket[i][numRounds]);
+
+            while (lowestSeedInfo.lowestSeed > numTeams) {
+
+                let matchupNumberAtLoSeed = lowestSeedInfo.matchupNumberAtLoSeed;
+                let teamAtHiSeed = lowestSeedInfo.teamAtHiSeed;
+
+                let nextUpSpot = Math.ceil(matchupNumberAtLoSeed / 2);
+
+                if (initialBracket[i][numRounds - 1][nextUpSpot].team1 == null) {
+                    initialBracket[i][numRounds - 1][nextUpSpot].team1 = initialBracket[i][numRounds][matchupNumberAtLoSeed][teamAtHiSeed];
+
+                } else {
+                    initialBracket[i][numRounds - 1][nextUpSpot].team2 = initialBracket[i][numRounds][matchupNumberAtLoSeed][teamAtHiSeed]
+
+                }
+
+                initialBracket[i][numRounds][matchupNumberAtLoSeed].team1 = null
+                initialBracket[i][numRounds][matchupNumberAtLoSeed].team2 = null
+
+                initialBracket = setSoloTeam(initialBracket, i, numRounds - 1, Math.ceil(matchupNumberAtLoSeed / 2));
+                initialBracket = checkTeamTopBottom(initialBracket);
+                lowestSeedInfo = lowestSeededTeamAndMatchup(initialBracket[i][numRounds]);
+
             }
         }
 
+        console.log(initialBracket);
         setBracket(initialBracket); // Set the initialized bracket
-    }, [numRounds, numTeams]);
 
 
-    // Propogate through bracket started in the finals round to correctly create bye-weeks and seeding
-    let lowestSeedInfo = lowestSeededTeamAndMatchup(bracket[numRounds]);
 
-    while (lowestSeedInfo.lowestSeed > numTeams) {
+    }, [numRounds, numTeams])
 
-        let matchupNumberAtLoSeed = lowestSeedInfo.matchupNumberAtLoSeed;
-        let teamAtHiSeed = lowestSeedInfo.teamAtHiSeed;
 
-        let nextUpSpot = Math.ceil(matchupNumberAtLoSeed / 2);
 
-        if (bracket[numRounds - 1][nextUpSpot].team1 == null) {
-
-            updateBracket(numRounds - 1, nextUpSpot, 'team1', bracket[numRounds][matchupNumberAtLoSeed][teamAtHiSeed]);
-
-        } else {
-
-            updateBracket(numRounds - 1, nextUpSpot, 'team2', bracket[numRounds][matchupNumberAtLoSeed][teamAtHiSeed]);
-        }
-        updateBracket(numRounds, matchupNumberAtLoSeed, 'team1', null);
-        updateBracket(numRounds, matchupNumberAtLoSeed, 'team2', null);
-
-        setSoloTeam(numRounds - 1, Math.ceil(matchupNumberAtLoSeed / 2));
-        checkTeamTopBottom();
-        lowestSeedInfo = lowestSeededTeamAndMatchup(bracket[numRounds]);
-
+    if (Object.keys(bracket).length == 0) {
+        return;
     }
 
-    const handleInputChange = (event, team, round, matchup) => {
 
-        updateBracket(round, matchup, `team${team}name`, event.target.value);
+    const handleInputChange = (region, event, team, round, matchup) => {
+
+        updateBracket(region, round, matchup, `team${team}name`, event.target.value);
         updateBracketFunc(bracket);
 
     };

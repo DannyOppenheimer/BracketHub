@@ -65,6 +65,8 @@
 .inactive_matchup .matchup {
     background-color: #FCCDF3;
     border: 2px solid #FCCDF3;
+
+    padding-right: 0.5px;
 }
 
 .inactive_matchup .team {

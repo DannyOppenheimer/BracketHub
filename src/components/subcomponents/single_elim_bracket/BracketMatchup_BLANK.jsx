@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import styles from './BracketMatchup.module.css';
 import PropTypes from 'prop-types';
 
-const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchup, bracket }) => {
+const getBaseLog = (base, number) => {
+    return Math.log(number) / Math.log(base);
+};
 
 
+const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round, matchup, bracket, buildData }) => {
 
     const enhancedChildren = React.Children.map(children, (child, index) => {
         if (React.isValidElement(child) && child.type === 'input') {
@@ -14,16 +17,19 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchu
             if (child.props.type === 'text') {
                 return React.cloneElement(child, {
                     onChange: (event) =>
-                        originalOnChange(event, index + 1, round, matchup)
+                        originalOnChange(region, event, index + 1, round, matchup)
                 });
             }
 
             // FOR CHOOSING YOUR PICKS
             if (child.props.type === 'radio') {
+                
+                let base = round === 'finals' ? bracket['finals'] : bracket[round][matchup];
+
                 let value =
                     index === 0
-                        ? bracket[round][matchup]['team1name']
-                        : bracket[round][matchup]['team2name'];
+                        ? base['team1name']
+                        : base['team2name'];
 
                 return (
                     <>
@@ -31,10 +37,10 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchu
                             <label key={index} className={styles.radio_container}>
                                 {React.cloneElement(child, {
                                     value: value,
-                                    name: `round-${round}-matchup-${matchup}`,
-                                    checked: bracket[round][matchup]['teamselected'] === index + 1,
+                                    name: `region-${region}-round-${round}-matchup-${matchup}`,
+                                    checked: base['teamselected'] === index + 1,
                                     onChange: (event) =>
-                                        originalOnChange(event, index + 1, round, matchup, Object.keys(bracket).length),
+                                        originalOnChange(region, event, index + 1, round, matchup, Object.keys(bracket).length),
 
                                 })}
                                 <span className={styles.radio_text}>{value}</span>
@@ -68,7 +74,6 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchu
                             :
                             <>
                                 <p className={styles.seed_num}>{seedingOn ? seed1 : <></>}</p>
-                                {/* Here, the input will detect change as users type and send the data all the way back to the CreateBracket component */}
                                 {enhancedChildren[0]}
                             </>
                     }
@@ -86,7 +91,6 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, round, matchu
                             :
                             <>
                                 <p className={styles.seed_num}>{seedingOn ? seed2 : <></>}</p>
-                                {/* Here, the input will detect change as users type and send the data all the way back to the CreateBracket component */}
                                 {enhancedChildren[1]}
                             </>
                     }

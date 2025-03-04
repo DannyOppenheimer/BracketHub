@@ -89,27 +89,28 @@ const GameView = () => {
         fetchGamePlayers();
     }, [gameID, db]);
 
-    const updateBracket = (round, matchup, key, value) => {
+    const updateBracket = (region, round, matchup, key, value) => {
         setBracket((prevBracket) => {
 
             const copyBracket = JSON.parse(JSON.stringify(prevBracket));
 
-            // console.log(
-            //     `Updating at round ${round}, matchup ${matchup}, key ${key}, with value ${value}`
-            // );
+            if(round === "POST_SEASON") {
+                copyBracket[region][key]= value;
+            }
 
-            if (value === "SEARCH_AND_DELETE") {
 
-                if (copyBracket[round][matchup]['team1name'] == key) {
-                    copyBracket[round][matchup]['team1name'] = null;
-                    copyBracket[round][matchup]['team1'] = null;
-                } else {
-                    copyBracket[round][matchup]['team2name'] = null;
-                    copyBracket[round][matchup]['team2'] = null;
+            else if (value === "SEARCH_AND_DELETE") {
+
+                if (copyBracket[region][round][matchup]['team1name'] == key) {
+                    copyBracket[region][round][matchup]['team1name'] = null;
+                    copyBracket[region][round][matchup]['team1'] = null;
+                } else if (copyBracket[region][round][matchup]['team2name'] == key) {
+                    copyBracket[region][round][matchup]['team2name'] = null;
+                    copyBracket[region][round][matchup]['team2'] = null;
                 }
 
             } else {
-                copyBracket[round][matchup][key] = value;
+                copyBracket[region][round][matchup][key] = value;
             }
 
 
@@ -117,20 +118,42 @@ const GameView = () => {
         });
     };
 
-    const recievePicks = (event, teamName, team, round, matchup, numRounds) => {
+    const recievePicks = (region, event, teamName, team, round, matchup, numRounds) => {
 
-        updateBracket(round, matchup, 'teamselected', team);
+        if(region === 'finals') {
+            updateBracket('finals', "POST_SEASON", null, `teamselected`, team);
+        } else {
+            updateBracket(region, round, matchup, 'teamselected', team);
+        }
+
+        
+        
         let count = 1;
         for (let i = round - 1; i > 0; i--) {
 
 
             if (i === round - 1) {
-                updateBracket(i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}`, bracket[round][matchup][`team${team}`]);
-                updateBracket(i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}name`, bracket[round][matchup][`team${team}name`]);
-            } else {
-                updateBracket(i, Math.ceil(matchup / (2 ** count)), bracket[round][matchup][`team${bracket[round][matchup]['teamselected']}name`], "SEARCH_AND_DELETE");
+                updateBracket(region, i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
+                updateBracket(region, i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
+            }  else {
+                updateBracket(region, i, Math.ceil(matchup / (2 ** count)), bracket[region][round][matchup][`team${bracket[region][round][matchup]['teamselected']}name`], "SEARCH_AND_DELETE");
             }
+
             count++;
+        }
+
+        if(round === '1') {
+  
+            if(savedBuild['Regions'] == 2) {
+
+                
+                updateBracket('finals', "POST_SEASON", null, `team${region === 1 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
+                updateBracket('finals', "POST_SEASON", null, `team${region === 1 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
+                
+            }
+            if(savedBuild['Regions'] === 4) {
+
+            }
         }
 
 

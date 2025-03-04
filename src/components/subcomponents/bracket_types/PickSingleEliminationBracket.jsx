@@ -5,9 +5,9 @@ import SingleEliminationBracket from '../single_elim_bracket/SingleEliminationBr
 
 const PickSingleEliminationBracket = ({ buildData, bracket, updateBracketFunc }) => {
 
-    const handlePicks = (event, team, round, matchup, numRounds) => {
+    const handlePicks = (region, event, team, round, matchup, numRounds) => {
 
-        updateBracketFunc(event, event.target.value, team, round, matchup, numRounds);
+        updateBracketFunc(region, event, event.target.value, team, round, matchup, numRounds);
 
     };
 
