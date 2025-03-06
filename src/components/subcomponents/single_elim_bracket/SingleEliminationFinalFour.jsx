@@ -5,12 +5,9 @@ import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
 
 const SingleEliminationFinalFour = ({ buildData, bracket, children, semiside }) => {
 
-    console.log(bracket);
-    console.log(bracket['semis']);
-    console.log(semiside)
     return (
         <>
-            {bracket['semis'][semiside].team1name === null && bracket['semis'][semiside].team2name === null ? <BracketMatchup_INACTIVE /> : <BracketMatchup_BLANK seedingOn={buildData['Seeding']} seed1={bracket['finals'].team1} seed2={bracket['finals'].team2} region={'semis'} round={'semis'} matchup={semiside} bracket={bracket} buildData={buildData}>{children}</BracketMatchup_BLANK>}
+            {bracket['semis'][semiside].team1name === null && bracket['semis'][semiside].team2name === null ? <BracketMatchup_INACTIVE /> : <BracketMatchup_BLANK seedingOn={buildData['Seeding']} seed1={bracket['semis'][semiside].team1} seed2={bracket['semis'][semiside].team2} region={'semis'} round={'semis'} matchup={semiside} bracket={bracket} buildData={buildData}>{children}</BracketMatchup_BLANK>}
         </>
     );
 

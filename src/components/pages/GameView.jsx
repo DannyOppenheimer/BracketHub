@@ -6,6 +6,8 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../subcomponents/FirebaseConfig';
 import PickSingleEliminationBracket from '../subcomponents/bracket_types/PickSingleEliminationBracket';
+import { keyboard } from '@testing-library/user-event/dist/cjs/keyboard/index.js';
+import PanZoomCanvas from '../subcomponents/style_components/PanZoomCanvas';
 
 const GameView = () => {
     const location = useLocation();
@@ -90,16 +92,18 @@ const GameView = () => {
     }, [gameID, db]);
 
     const updateBracket = (region, round, matchup, key, value) => {
+
         setBracket((prevBracket) => {
 
             const copyBracket = JSON.parse(JSON.stringify(prevBracket));
 
-            if(round === "POST_SEASON") {
-                copyBracket[region][key]= value;
+            if (round == "FINALS") {
+                copyBracket[region][key] = value;
             }
-
-
-            else if (value === "SEARCH_AND_DELETE") {
+            else if (matchup == 'SEMIS') {
+                copyBracket[region][round][key] = value;
+            }
+            else if (value == "SEARCH_AND_DELETE") {
 
                 if (copyBracket[region][round][matchup]['team1name'] == key) {
                     copyBracket[region][round][matchup]['team1name'] = null;
@@ -120,38 +124,52 @@ const GameView = () => {
 
     const recievePicks = (region, event, teamName, team, round, matchup, numRounds) => {
 
-        if(region === 'finals') {
-            updateBracket('finals', "POST_SEASON", null, `teamselected`, team);
+        if (region == 'finals') {
+            updateBracket('finals', "FINALS", null, `teamselected`, team);
+        } else if (region == 'semis') {
+            updateBracket('semis', matchup, 'SEMIS', `teamselected`, team);
         } else {
+
             updateBracket(region, round, matchup, 'teamselected', team);
         }
 
-        
-        
         let count = 1;
         for (let i = round - 1; i > 0; i--) {
 
-
             if (i === round - 1) {
+
                 updateBracket(region, i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
                 updateBracket(region, i, Math.ceil(matchup / (2 ** count)), `team${matchup % 2 !== 0 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
-            }  else {
+            } else {
+
                 updateBracket(region, i, Math.ceil(matchup / (2 ** count)), bracket[region][round][matchup][`team${bracket[region][round][matchup]['teamselected']}name`], "SEARCH_AND_DELETE");
             }
 
             count++;
         }
 
-        if(round === '1') {
-  
-            if(savedBuild['Regions'] == 2) {
+        if (round == '1') {
 
-                
-                updateBracket('finals', "POST_SEASON", null, `team${region === 1 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
-                updateBracket('finals', "POST_SEASON", null, `team${region === 1 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
-                
+            if (savedBuild['Regions'] == 2) {
+
+
+                updateBracket('finals', "FINALS", null, `team${region === 1 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
+                updateBracket('finals', "FINALS", null, `team${region === 1 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
+
             }
-            if(savedBuild['Regions'] === 4) {
+            if (savedBuild['Regions'] == 4) {
+
+                updateBracket('semis', region == 1 || region == 3 ? 'left' : 'right', 'SEMIS', `team${(region == 1 || region == 2) ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
+                updateBracket('semis', region == 1 || region == 3 ? 'left' : 'right', 'SEMIS', `team${(region == 1 || region == 2) ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
+
+            }
+        }
+
+        if (region == 'semis') {
+            if (savedBuild['Regions'] == 4) {
+
+                updateBracket('finals', "FINALS", null, `team${matchup == 'left' ? 1 : 2}`, bracket[region][matchup][`team${team}`]);
+                updateBracket('finals', "FINALS", null, `team${matchup == 'left' ? 1 : 2}name`, bracket[region][matchup][`team${team}name`]);
 
             }
         }
@@ -169,9 +187,25 @@ const GameView = () => {
 
     return (
         <>
-            <div>
-                <PickSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recievePicks} />
+
+            <div className={styles.upper_container}>
+                <h1 className={styles.title}>{savedBuild.Title}</h1>
+                <h2 className={styles.subtitle}>Deadline to Enter Picks: {new Date(savedBuild.Deadline).toLocaleString()}</h2>
+                <h2 className={styles.subtitle}>Format: {savedBuild.Format} bracket</h2>
+
+                <PanZoomCanvas type='pick'>
+                    <div>
+                        <PickSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recievePicks} />
+                    </div>
+
+
+                </PanZoomCanvas>
+                <button className={styles.submit_button} disabled={Date() > new Date(savedBuild.Deadline)}>
+                    {new Date() > new Date(savedBuild.Deadline) ? "Deadline Passed" : "Submit Picks"}
+                </button>
             </div>
+
+
 
             <div className={styles.container}>
                 <h1 className={styles.title}>Game Players</h1>

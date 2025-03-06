@@ -58,7 +58,6 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     const numTeams = buildData['Participants Per Region'];
     const numRegions = buildData['Regions'];
     const numRounds = Math.ceil(getBaseLog(2, numTeams));
-    console.log(numRounds + " -numrounds");
 
     let [bracket, setBracket] = useState({});
 
@@ -141,11 +140,11 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
         initialBracket['semis'] = {};
         initialBracket['semis']['left'] = blankMatchup;
         initialBracket['semis']['right'] = blankMatchup;
-        
-        
+
+
         for (let h = 1; h <= numRegions; h++) {
             initialBracket[h] = {}
-            
+
 
             for (let i = 1; i <= numRounds; i++) {
                 initialBracket[h][i] = {};
@@ -175,7 +174,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
             }
 
         }
-        console.log(bracket);
+
 
         for (let i = 1; i <= numRegions; i++) {
 
@@ -208,7 +207,6 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
             }
         }
 
-        console.log(initialBracket);
         setBracket(initialBracket); // Set the initialized bracket
 
 

@@ -11,6 +11,7 @@ import { NavLink } from "react-router-dom";
 import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import PanZoomCanvas from '../subcomponents/style_components/PanZoomCanvas.jsx';
 
 let currentUser = '';
 const auth = getAuth();
@@ -255,8 +256,10 @@ const CreateBracket = () => {
                 {
                     ((savedBuild['Deadline'] !== undefined && savedBuild['Deadline'] !== '') || (savedBuild['Format'] === 'print' && savedBuild['Seeding'] !== undefined && savedBuild['Seeding'])) ?
                         <>
+                            <PanZoomCanvas type={'create'}>
+                                <CreateSingleEliminationBracket buildData={savedBuild} updateBracketFunc={setBuiltBracket} />
+                            </PanZoomCanvas>
 
-                            <CreateSingleEliminationBracket buildData={savedBuild} updateBracketFunc={setBuiltBracket} />
 
                             <div className={styles.submit_button}>
                                 <StyleButton clicked={() => submit()} text='Submit Bracket' disabled={isSubmitButtonDisabled} />

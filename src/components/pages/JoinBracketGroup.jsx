@@ -43,7 +43,6 @@ const JoinBracketGroup = () => {
                 games: arrayUnion(typedCode),
             });
 
-            console.log("Player added successfully!");
         } catch (error) {
             console.error("Error adding player to the bracket:", error.message);
         }
