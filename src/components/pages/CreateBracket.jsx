@@ -66,6 +66,9 @@ const CreateBracket = () => {
                 access: savedBuild['Access'],
                 deadline: savedBuild['Deadline'],
                 type: 'singleelim_predict',
+                brackets: {},
+                winner: null,
+                
 
             });
 

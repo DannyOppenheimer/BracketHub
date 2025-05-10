@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import '../subcomponents/FirebaseConfig';
 import styles from './GameView.module.css';
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from '../subcomponents/FirebaseConfig';
 import PickSingleEliminationBracket from '../subcomponents/bracket_types/PickSingleEliminationBracket';
+import GamePlayerList from '../subcomponents/function_components/GamePlayerList';
 import { keyboard } from '@testing-library/user-event/dist/cjs/keyboard/index.js';
 import PanZoomCanvas from '../subcomponents/style_components/PanZoomCanvas';
+import AdminChooseSingleEliminationBracket from '../subcomponents/bracket_types/AdminChooseSingleEliminationBracket';
+import PlayerViewSingleEliminationBracket from '../subcomponents/bracket_types/PlayerViewSingleEliminationBracket';
 
 const GameView = () => {
     const location = useLocation();
@@ -17,17 +20,29 @@ const GameView = () => {
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [bracket, setBracket] = useState(null);
+    const [playBracket, setPlayBracket] = useState(null);
     const [savedBuild, setSavedBuild] = useState(null);
     const [savedPicks, setSavedPicks] = useState(null);
+    const [selectedChampion, setSelectionChampion] = useState('');
+    const [isHost, setIsHost] = useState(false);
 
     const auth = getAuth();
     const db = getFirestore(app);
 
     useEffect(() => {
+        const fetchHostStatus = async (uid) => {
+            const gameRef = doc(db, "ActiveGames", gameID);
+            const gameSnap = await getDoc(gameRef);
+            if (gameSnap.data().host === uid) {
+                setIsHost(true);
+            }
+        }
+
         // Check authentication state
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setCurrentUser(user);
+                fetchHostStatus(user.uid);
             } else {
                 setCurrentUser(null);
             }
@@ -88,7 +103,10 @@ const GameView = () => {
             }
         };
 
+
+
         fetchGamePlayers();
+
     }, [gameID, db]);
 
     const updateBracket = (region, round, matchup, key, value) => {
@@ -177,6 +195,50 @@ const GameView = () => {
 
     }
 
+    const recieveAdminPicks = (region, event, teamName, team, round, matchup, numRounds) => {
+        /*
+        
+                const gameRef = doc(db, "ActiveGames", gameID);
+                const gameSnap = await getDoc(gameRef);
+                const gameData = gameSnap.data();
+                console.log(fullBracket);
+                if (!gameData.playBracket) {
+                    await updateDoc(gameRef, {
+                        playBracket: fullBracket,
+                    });
+                    console.log("Created playBracket from existing bracket structure");
+                }
+        
+                const [region, round, matchup, team] = targetTeam;
+        
+                console.log(region, round, matchup, team);
+                const fieldPath = `playBracket.${region}.${round}.${matchup / 2}`;
+                const updateObj = {};
+        
+        
+                updateObj[fieldPath][`team${matchup % 2 !== 0 ? 1 : 2}`] = popupWinTeam;
+                updateObj[fieldPath][`team${matchup % 2 !== 0 ? 1 : 2}name`] = popupWinTeam;
+        
+                try {
+                    await updateDoc(gameRef, updateObj);
+                    console.log(`Updated ${fieldPath} to ${popupWinTeam}`);
+                } catch (error) {
+                    console.error("Error updating playBracket field:", error);
+                }
+                    */
+    }
+
+    const submit = () => {
+
+        const userId = currentUser.uid;
+
+        const bracketDocRef = doc(db, "ActiveGames", gameID, "brackets", userId);
+
+        setDoc(bracketDocRef, { bracket });
+
+        alert("Submitted");
+    }
+
     if (!gameID) {
         return <p className={styles.error}>No game selected. Please try again.</p>;
     }
@@ -187,57 +249,60 @@ const GameView = () => {
 
     return (
         <>
+            {
+                new Date() < new Date(savedBuild.Deadline) ?
+                    <div className={styles.upper_container}>
+                        <h1 className={styles.title}>{savedBuild.Title}</h1>
+                        <h2 className={styles.subtitle}>Deadline to Enter Picks: {new Date(savedBuild.Deadline).toLocaleString()}</h2>
+                        <h2 className={styles.subtitle}>Format: {savedBuild.Format} bracket</h2>
 
-            <div className={styles.upper_container}>
-                <h1 className={styles.title}>{savedBuild.Title}</h1>
-                <h2 className={styles.subtitle}>Deadline to Enter Picks: {new Date(savedBuild.Deadline).toLocaleString()}</h2>
-                <h2 className={styles.subtitle}>Format: {savedBuild.Format} bracket</h2>
+                        <PanZoomCanvas type='pick'>
+                            <div>
+                                <PickSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recievePicks} />
+                            </div>
+                        </PanZoomCanvas>
 
-                <PanZoomCanvas type='pick'>
-                    <div>
-                        <PickSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recievePicks} />
+                        <button onClick={submit} className={styles.submit_button}>
+                            {"Submit Picks"}
+                        </button>
+
+                    </div>
+                    :
+                    <div className={styles.upper_container}>
+                        <h1 className={styles.title}>{savedBuild.Title}</h1>
+                        <h2 className={styles.subtitle}>{isHost ? "Select winners in each matchup to update tournament" : <></>}</h2>
+                        <h2 className={styles.subtitle}>Format: {savedBuild.Format} bracket</h2>
+
+                        <>
+
+                            {isHost ?
+
+                                <PanZoomCanvas type='pick'>
+                                    <div>
+                                        <AdminChooseSingleEliminationBracket buildData={savedBuild} bracket={bracket} updateBracketFunc={recieveAdminPicks} gameID={gameID} />
+                                    </div>
+                                </PanZoomCanvas>
+                                :
+                                <PanZoomCanvas type='pick'>
+                                    <div>
+                                        <PlayerViewSingleEliminationBracket buildData={savedBuild} bracket={bracket} />
+                                    </div>
+                                </PanZoomCanvas>
+                            }
+
+                        </>
+
+
                     </div>
 
 
-                </PanZoomCanvas>
-                <button className={styles.submit_button} disabled={Date() > new Date(savedBuild.Deadline)}>
-                    {new Date() > new Date(savedBuild.Deadline) ? "Deadline Passed" : "Submit Picks"}
-                </button>
-            </div>
+
+
+            }
 
 
 
-            <div className={styles.container}>
-                <h1 className={styles.title}>Game Players</h1>
-                {currentUser ? (
-                    <table className={styles.table}>
-                        <thead>
-                            <tr className={styles.tableHeader}>
-                                <th>#</th>
-                                <th>Player Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {players.length > 0 ? (
-                                players.map((playerName, index) => (
-                                    <tr key={index} className={styles.tableRow}>
-                                        <td className={styles.cell}>{index + 1}</td>
-                                        <td className={styles.cell}>{playerName}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="2" className={styles.noPlayers}>
-                                        No players have joined yet.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p className={styles.notSignedIn}>Please sign in to view the game.</p>
-                )}
-            </div>
+            <GamePlayerList currentUser={currentUser} players={players} />
         </>
 
     );

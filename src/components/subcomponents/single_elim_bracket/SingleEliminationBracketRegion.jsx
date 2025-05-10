@@ -3,7 +3,7 @@ import styles from './SingleEliminationBracketRegion.module.css';
 import BracketMatchup_BLANK from './BracketMatchup_BLANK';
 import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
 
-const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, children }) => {
+const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, children, gameID, fullBracket }) => {
 
 
     // easy to access user preference
@@ -45,7 +45,7 @@ const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, childre
                                                             ?
                                                             <BracketMatchup_INACTIVE key={`inactive_cell_${j}`} />
                                                             :
-                                                            <BracketMatchup_BLANK key={`cell_${bracket[round][matchup].team1}_${bracket[round][matchup].team2}`} seedingOn={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} region={regionNum} round={round} matchup={matchup} bracket={bracket} buildData={buildData} >
+                                                            <BracketMatchup_BLANK key={`cell_${bracket[round][matchup].team1}_${bracket[round][matchup].team2}`} seedingOn={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} region={regionNum} round={round} matchup={matchup} bracket={bracket} buildData={buildData} gameID={gameID} fullBracket={fullBracket}>
                                                                 {children}
                                                             </BracketMatchup_BLANK>
                                                     }
@@ -76,7 +76,7 @@ const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, childre
                     })
                 }
             </div>
-        </div>
+        </div >
 
 
     )

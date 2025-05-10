@@ -104,7 +104,8 @@
     width: 203px;
 }
 
-.team_input_radio {
+.team_input_radio,
+.admin_choose_radio {
     appearance: none;
 
 }
@@ -136,10 +137,36 @@
 .team_input_radio:checked::before {
     background-color: #8b3886;
     border-color: #732f6e;
-
-
 }
 
+.admin_choose_radio {
+    margin: 0;
+    margin-right: 12px;
+    margin-left: 12px;
+
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #732f6e;
+
+    border-radius: 2px;
+    /* ← was 50%, now slightly rounded square */
+    background-color: #fff;
+    transition: all 0.3s ease;
+
+    transform: translateY(6px);
+}
+
+/* Optional: Add square indicator when selected */
+.admin_choose_radio:checked::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #8b3886;
+    border-color: #732f6e;
+}
 
 .radio_text {
 

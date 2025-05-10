@@ -13,8 +13,8 @@ const PickSingleEliminationBracket = ({ buildData, bracket, updateBracketFunc })
 
     return (
         <SingleEliminationBracket buildData={buildData} bracket={bracket}>
-            <input className={matchupStyles.team_input_radio} type='radio' onChange={handlePicks} ></input>
-            <input className={matchupStyles.team_input_radio} type='radio' onChange={handlePicks} ></input>
+            <input className={matchupStyles.team_input_radio} data-role='pick' type='radio' onChange={handlePicks} ></input>
+            <input className={matchupStyles.team_input_radio} data-role='pick' type='radio' onChange={handlePicks} ></input>
         </SingleEliminationBracket>
     )
 }

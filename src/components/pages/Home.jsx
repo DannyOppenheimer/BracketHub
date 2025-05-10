@@ -10,7 +10,7 @@ const Home = () => {
         navigate(path);
     }
 
-    const description = "Make brackets for your backyard basketball tournament, online 1v1, or unique professional sport\nCreate groups and add your friends, or explore public brackets. Completely free!"
+    const description = "Make brackets for your backyard basketball tournament, online 1v1, or unique professional sport\nCreate groups, add your friends, enjoy March Madness style scoring. Completely free!"
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Bracket Hub</h1>

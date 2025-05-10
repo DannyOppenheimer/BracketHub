@@ -57,39 +57,6 @@
 
 }
 
-/* Table Styling */
-.table {
-    width: 100%;
-    margin-top: 1rem;
-    border-collapse: collapse;
-
-    background-color: white;
-
-    overflow: hidden;
-}
-
-.tableHeader th {
-    font-family: 'Raleway', sans-serif;
-    background-color: #b7b7b7;
-    padding: 1rem;
-    text-align: left;
-}
-
-
-.cell {
-    padding: 0.8rem;
-
-    text-align: left;
-    color: #333;
-    font-size: 1rem;
-}
-
-.noPlayers {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #777;
-    padding: 1rem;
-}
 
 .upper_container {
     display: flex;

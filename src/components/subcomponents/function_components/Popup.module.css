@@ -1,0 +1,61 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupbox {
+    width: 40%;
+    padding: 2vh 2vw;
+    background-color: white;
+    border: 3px solid lightgray;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+}
+
+.message {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.confirm,
+.deny {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+
+    padding: 0.5rem 1.5rem;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color: #e23cc6;
+
+    box-shadow: 3px 3px #888888;
+    transition: background 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.confirm:hover,
+.deny:hover {
+    transform: scale(1.04) !important;
+}
+
+.confirm:active,
+.deny:active {
+    transform: scale(0.96) !important;
+}

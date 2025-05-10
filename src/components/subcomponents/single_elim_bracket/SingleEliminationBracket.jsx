@@ -7,7 +7,7 @@ import SingleEliminationFinals from './SingleEliminationFinals';
 import SingleEliminationFinalFour from './SingleEliminationFinalFour';
 
 
-const SingleEliminationBracket = ({ buildData, bracket, children }) => {
+const SingleEliminationBracket = ({ buildData, bracket, children, gameID }) => {
 
     const numRegions = buildData['Regions'];
 
@@ -26,7 +26,7 @@ const SingleEliminationBracket = ({ buildData, bracket, children }) => {
     for (let i = 0; i < numRegions; i++) {
         regions.push(
             <>
-                <SingleEliminationBracketRegion key={`region_${i + 1}`} regionNum={i + 1} buildData={buildData} bracket={bracket[i + 1]} >
+                <SingleEliminationBracketRegion key={`region_${i + 1}`} regionNum={i + 1} buildData={buildData} bracket={bracket[i + 1]} gameID={gameID} fullBracket={bracket} >
                     {children}
                 </SingleEliminationBracketRegion>
             </>
