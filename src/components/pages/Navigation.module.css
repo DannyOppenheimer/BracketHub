@@ -55,3 +55,47 @@
     width: 30px;
     height: 30px;
 }
+
+@media (max-width: 860px) {
+    .big_header_list {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-left: 0;
+        width: 100%;
+        margin: 0 auto;
+        gap: 1vh;
+        /* cleaner spacing between items */
+    }
+
+    .header_item {
+        width: auto;
+        padding-top: 1vh;
+        /* reduced */
+        padding-bottom: 1vh;
+        /* reduced */
+        text-align: center;
+        margin: 0;
+    }
+
+    .header_button {
+        display: block;
+        width: auto;
+        padding: 1vh 3vh;
+        /* reduced padding */
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .header_item_right {
+        margin: 0;
+        align-self: center;
+        padding-top: 1vh;
+        padding-bottom: 1vh;
+    }
+
+    .account_image {
+        width: 30px;
+        height: 30px;
+    }
+}

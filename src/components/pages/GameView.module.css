@@ -15,6 +15,7 @@
     margin: 0 auto;
     margin-top: 5px;
     margin-bottom: 5px;
+
 }
 
 .container {
@@ -39,7 +40,7 @@
 
 /* Title */
 .title {
-    font-size: 1.3rem;
+    font-size: 2rem;
     font-weight: bold;
     text-align: left;
     font-family: 'Raleway', sans-serif;
@@ -100,4 +101,50 @@
     text-decoration: none;
 
     transform: scale(0.96) !important;
+}
+
+
+.youre_host {
+    background-color: #e23cc6;
+    padding: 5px 5px 5px 5px;
+    border-radius: 3px;
+    font-weight: 900;
+    font-style: italic;
+    margin-right: 5px;
+}
+
+.select_winner_bla_bla_bla {
+    font-style: italic;
+    font-weight: 900;
+}
+
+.start_game {
+    color: black;
+
+    padding: 2px 7px 2px 7px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    font-family: 'Raleway', sans-serif;
+
+    background-color: #e23cc6;
+
+    border: solid black;
+    box-shadow: 3px 3px #888888;
+
+    border-radius: 4px;
+
+    min-width: 190px;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+
+}
+
+.start_game:hover {
+    transform: scale(1.02);
+}
+
+.start_game:active {
+    transform: scale(0.98);
 }

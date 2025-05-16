@@ -24,7 +24,6 @@ const JoinBracketGroup = () => {
     const db = getFirestore();
 
     const handleSubmit = () => {
-        console.log(typedCode);
 
         if (!currentUser || currentUser === '') {
             console.error("No user is signed in.");

@@ -66,6 +66,7 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
                                 {React.cloneElement(child, {
                                     value: value,
                                     name: `region-${region}-round-${round}-matchup-${matchup}`,
+                                    checked: base['teamselected'] === index + 1,
                                     onChange: (event) => {
                                         setPopupWinTeam(value);
                                         setPopupLoseTeam(index === 0 ? base['team2name'] : base['team1name']);
@@ -159,7 +160,7 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
 
             {showPopup && (
                 <Popup
-                    message={`Are you sure you want to mark ${popupWinTeam} as winning over ${popupLoseTeam}? This action cannot be undone.`}
+                    message={`Are you sure you want to mark ${popupWinTeam} as winning${popupLoseTeam === null ? '' : ' over ' + popupLoseTeam}?`}
                     onConfirm={handleConfirm}
                     onCancel={handleCancel}
                 />

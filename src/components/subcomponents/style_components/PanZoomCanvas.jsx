@@ -21,7 +21,7 @@ export default function PanZoomCanvas({ type, children }) {
             if (type == 'pick') {
                 newHeight = Math.max(200, Math.min(content.height + 50, 600)); // Min: 200px, Max: 80vh
             } else if (type == 'create') {
-                newHeight = 600 // Min: 200px, Max: 80vh
+                newHeight = 800 // Min: 200px, Max: 80vh
             }
 
 
@@ -89,8 +89,8 @@ export default function PanZoomCanvas({ type, children }) {
     return (
         <div
             ref={containerRef}
-            className="relative overflow-hidden w-full bg-gray-200 border border-gray-400"
-            style={{ height: canvasHeight, maxHeight: "80vh", width: "97%", margin: "0 auto", boxShadow: "0 0 5px rgba(70, 70, 70, 0.5)" }} // Dynamically set height
+            className="relative overflow-hidden w-full"
+            style={{ height: canvasHeight, width: "100%", margin: "0 auto" }} // Dynamically set height
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}

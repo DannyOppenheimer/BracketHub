@@ -12,6 +12,8 @@ const Account = () => {
     const [loading, setLoading] = useState(true);          // Manage loading state
     const [isEditing, setIsEditing] = useState(false);     // Edit mode state
     const [newDisplayName, setNewDisplayName] = useState(''); // New display name input
+    const [selectedTheme, setSelectedTheme] = useState('theme1'); // default selected is 'team1'
+
     const navigate = useNavigate();
     const auth = getAuth();
 
@@ -98,6 +100,20 @@ const Account = () => {
                     <tr>
                         <td>Email</td>
                         <td>{currentUser.email}</td>
+                    </tr>
+                    <tr>
+                        <td>Website Theme</td>
+                        <td>
+                            <select
+                                value={selectedTheme}
+                                onChange={(e) => setSelectedTheme(e.target.value)}
+                                className={styles.theme_select}
+                            >
+                                <option value="theme1">BracketHub BubbleGum Pink</option>
+                                <option value="theme2">Dark Mode</option>
+                                <option value="theme3">Pastel</option>
+                            </select>
+                        </td>
                     </tr>
                 </tbody>
             </table>

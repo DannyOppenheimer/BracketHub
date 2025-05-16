@@ -127,6 +127,7 @@ const AuthFields = ({ title }) => {
                     owner: false,
                     vip: false,
                     pro: false,
+                    theme: "pink",
                     flexstring1: "",
                     flexstring2: "",
                     flexint1: 0,

@@ -1,14 +1,10 @@
 .button {
     color: black;
 
-    min-width: 20vw;
-
-    padding-right: 2.5vw;
-    padding-left: 2.5vw;
-    padding-top: 0.5vw;
-    padding-bottom: 0.5vw;
-
-    margin-right: 2vw;
+    padding: 2px 7px 2px 7px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
 
     font-family: 'Raleway', sans-serif;
 
@@ -18,6 +14,8 @@
     box-shadow: 3px 3px #888888;
 
     border-radius: 4px;
+
+    min-width: 190px;
 
     transition: background 0.3s ease, transform 0.2s ease;
 

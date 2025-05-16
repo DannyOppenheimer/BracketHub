@@ -8,8 +8,8 @@ const PlayerViewSingleEliminationBracket = ({ buildData, bracket }) => {
 
     return (
         <SingleEliminationBracket buildData={buildData} bracket={bracket}>
-            <input className={matchupStyles.team_display} type='text' disabled={true} placeholder='Error Team Not Found'></input>
-            <input className={matchupStyles.team_display} type='text' disabled={true} placeholder='Error Team Not Found'></input>
+            <input className={matchupStyles.team_display} type='text' data-role='player_view' disabled={true} placeholder='Error Team Not Found'></input>
+            <input className={matchupStyles.team_display} type='text' data-role='player_view' disabled={true} placeholder='Error Team Not Found'></input>
         </SingleEliminationBracket>
     )
 }
