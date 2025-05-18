@@ -3,11 +3,9 @@ import matchupStyles from '../single_elim_bracket/BracketMatchup.module.css';
 
 import SingleEliminationBracket from '../single_elim_bracket/SingleEliminationBracket';
 
-const PlayerViewSingleEliminationBracket = ({ buildData, bracket }) => {
-
-
+const PlayerViewSingleEliminationBracket = ({ buildData, bracket, playBracket }) => {
     return (
-        <SingleEliminationBracket buildData={buildData} bracket={bracket}>
+        <SingleEliminationBracket buildData={buildData} bracket={bracket} playBracket={playBracket}>
             <input className={matchupStyles.team_display} type='text' data-role='player_view' disabled={true} placeholder='Error Team Not Found'></input>
             <input className={matchupStyles.team_display} type='text' data-role='player_view' disabled={true} placeholder='Error Team Not Found'></input>
         </SingleEliminationBracket>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './GamePlayerList.module.css';
 
-const GamePlayersTable = ({ currentUser, isInPlay, playerBrackets }) => {
+const GamePlayersTable = ({ currentUser, isInPlay, playerBrackets, playBracket }) => {
     const rounds = ['R128', 'R64', 'R32', 'R16', 'R8', 'R4', 'Semis', 'Finals'];
 
     return (
@@ -36,7 +36,7 @@ const GamePlayersTable = ({ currentUser, isInPlay, playerBrackets }) => {
                         ) : (
                             <tr>
                                 <td colSpan={isInPlay ? 2 + rounds.length : 2} className={styles.noPlayers}>
-                                    No players have joined yet.
+                                    No players have submitted brackets yet.
                                 </td>
                             </tr>
                         )}

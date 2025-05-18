@@ -37,12 +37,13 @@ const GameView = () => {
                 setIsHost(true);
             }
 
+
             if (gameSnap.data().playBracket === undefined) {
+                console.log(gameSnap.data().bracket)
                 await updateDoc(gameRef, {
                     playBracket: gameSnap.data().bracket
                 });
 
-                setPlayBracket(bracket);
             } else {
                 setPlayBracket(gameSnap.data().playBracket);
             }
@@ -62,7 +63,6 @@ const GameView = () => {
 
 
                     if (cur_uid === uid) {
-                        console.log(bracketData);
                         setBracket(Object.values(bracketData)[0]);
                     }
                     return {
@@ -340,7 +340,8 @@ const GameView = () => {
         return <p className={styles.error}>No game selected. Please try again.</p>;
     }
 
-    if (loading) {
+
+    if (loading || playBracket === null || playBracket === undefined) {
         return <p className={styles.loading}>Loading...</p>;
     }
 
@@ -402,7 +403,7 @@ const GameView = () => {
                                 <>
                                     <PanZoomCanvas type='pick'>
                                         <div>
-                                            <AdminChooseSingleEliminationBracket buildData={savedBuild} bracket={playBracket} updateBracketFunc={recieveAdminPicks} gameID={gameID} />
+                                            <AdminChooseSingleEliminationBracket buildData={savedBuild} bracket={playBracket} playBracket={playBracket} updateBracketFunc={recieveAdminPicks} gameID={gameID} />
                                         </div>
                                     </PanZoomCanvas>
                                     <h2 className={styles.subtitle}>Your Bracket</h2>
@@ -412,7 +413,7 @@ const GameView = () => {
                             }
                             <PanZoomCanvas type='pick'>
                                 <div>
-                                    <PlayerViewSingleEliminationBracket buildData={savedBuild} bracket={bracket} />
+                                    <PlayerViewSingleEliminationBracket buildData={savedBuild} bracket={playBracket} playBracket={bracket} />
                                 </div>
                             </PanZoomCanvas>
                         </>

@@ -136,10 +136,16 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
             won: false,
         };
 
-        initialBracket['finals'] = blankMatchup;
+
+        initialBracket['finals'] = { ...blankMatchup };
         initialBracket['semis'] = {};
-        initialBracket['semis']['left'] = blankMatchup;
-        initialBracket['semis']['right'] = blankMatchup;
+        initialBracket['semis']['left'] = { ...blankMatchup };
+        initialBracket['semis']['right'] = { ...blankMatchup };
+
+
+
+
+
 
 
         for (let h = 1; h <= numRegions; h++) {
@@ -167,14 +173,13 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
                             won: false,
                         };
                     } else {
-                        initialBracket[h][i][j] = blankMatchup
+                        initialBracket[h][i][j] = { ...blankMatchup }
                     }
                 }
 
             }
 
         }
-
 
         for (let i = 1; i <= numRegions; i++) {
 
@@ -206,7 +211,6 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
 
             }
         }
-
         setBracket(initialBracket); // Set the initialized bracket
 
 
@@ -229,6 +233,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
 
 
     return (
+
         <SingleEliminationBracket buildData={buildData} bracket={bracket}>
             <input className={matchupStyles.team_input} type='text' placeholder='Team 1' onChange={handleInputChange} ></input>
             <input className={matchupStyles.team_input} type='text' placeholder='Team 2' onChange={handleInputChange} ></input>

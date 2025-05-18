@@ -7,18 +7,18 @@ import SingleEliminationFinals from './SingleEliminationFinals';
 import SingleEliminationFinalFour from './SingleEliminationFinalFour';
 
 
-const SingleEliminationBracket = ({ buildData, bracket, children, gameID }) => {
-
+const SingleEliminationBracket = ({ buildData, bracket, children, gameID, playBracket }) => {
     const numRegions = buildData['Regions'];
 
+
     let finals = <div className={`${styles.finals} ${numRegions == 4 ? styles.finals_4 : ''}`}>
-        <SingleEliminationFinals buildData={buildData} bracket={bracket}>{children}</SingleEliminationFinals>
+        <SingleEliminationFinals buildData={buildData} bracket={bracket} playBracket={playBracket}>{children}</SingleEliminationFinals>
     </div>
     let semis_left = <div className={`${styles.finals} ${numRegions == 4 ? styles.finals_4 : ''}`}>
-        <SingleEliminationFinalFour buildData={buildData} bracket={bracket} semiside={'left'}>{children}</SingleEliminationFinalFour>
+        <SingleEliminationFinalFour buildData={buildData} bracket={bracket} playBracket={playBracket} semiside={'left'}>{children}</SingleEliminationFinalFour>
     </div>
     let semis_right = <div className={`${styles.finals} ${numRegions == 4 ? styles.finals_4 : ''}`}>
-        <SingleEliminationFinalFour buildData={buildData} bracket={bracket} semiside={'right'}>{children}</SingleEliminationFinalFour>
+        <SingleEliminationFinalFour buildData={buildData} bracket={bracket} playBracket={playBracket} semiside={'right'}>{children}</SingleEliminationFinalFour>
     </div>
     let blank_div = <div className={styles.finals}></div>
 
@@ -26,7 +26,7 @@ const SingleEliminationBracket = ({ buildData, bracket, children, gameID }) => {
     for (let i = 0; i < numRegions; i++) {
         regions.push(
             <>
-                <SingleEliminationBracketRegion key={`region_${i + 1}`} regionNum={i + 1} buildData={buildData} bracket={bracket[i + 1]} gameID={gameID} fullBracket={bracket} >
+                <SingleEliminationBracketRegion key={`region_${i + 1}`} regionNum={i + 1} buildData={buildData} bracket={bracket[i + 1]} gameID={gameID} fullBracket={bracket} playBracket={playBracket} >
                     {children}
                 </SingleEliminationBracketRegion>
             </>

@@ -14,12 +14,15 @@ const getBaseLog = (base, number) => {
 const db = getFirestore(app);
 
 
-const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round, matchup, bracket, buildData, gameID, fullBracket }) => {
+const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round, matchup, bracket, buildData, gameID, fullBracket, playBracket }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupWinTeam, setPopupWinTeam] = useState('');
     const [popupLoseTeam, setPopupLoseTeam] = useState('');
     const [pendingAction, setPendingAction] = useState(null);
+    const [correct, setCorrect] = useState("");
 
+    let chosenTeam = null;
+    let isPlayerView = false;
 
     const handleConfirm = () => {
         if (pendingAction) {
@@ -41,22 +44,67 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
         if (React.isValidElement(child) && child.type === 'input') {
             const originalOnChange = child.props.onChange;
 
+            let base = round === 'finals' ? bracket['finals'] : bracket[round][matchup];
+
+            let value =
+                index === 0
+                    ? base['team1name']
+                    : base['team2name'];
+
+
             // FOR CREATING NEW BRACKET
             if (child.props.type === 'text') {
-                return React.cloneElement(child, {
-                    onChange: (event) =>
-                        originalOnChange(region, event, index + 1, round, matchup)
-                });
+
+
+                if (child.props['data-role'] === 'player_view') {
+                    isPlayerView = true;
+                    // NOTE: To Fix, bracket and play bracket have been swapped in the return code for GameView.jsx
+                    // So, play bracket here is actually the bracket, and bracket is actually the play bracket
+                    let temp_correct = "";
+
+                    if (region !== 'finals') {
+                        chosenTeam = playBracket[region][round][matchup][`team${playBracket[region][round][matchup].teamselected}name`];
+                        console.log()
+                        if (fullBracket[region][round][matchup].teamselected === null) {
+                            temp_correct = "❔";
+                        }
+                        else if (fullBracket[region][round][matchup][`team${fullBracket[region][round][matchup].teamselected}`] === playBracket[region][round][matchup][`team${playBracket[region][round][matchup].teamselected}`]) {
+                            temp_correct = "✔️";
+                        } else {
+                            temp_correct = "✖️";
+                        }
+
+                    }
+                    if (temp_correct !== correct) {
+                        setCorrect(temp_correct);
+                    }
+                    let playBase = round === 'finals' ? fullBracket['finals'] : fullBracket[region][round][matchup];
+                    let play_value =
+                        index === 0
+                            ? playBase['team1name']
+                            : playBase['team2name'];
+
+                    return (
+                        <div className={styles.team_display_container}>
+                            {React.cloneElement(child, {
+                                value: play_value,
+                                className: styles.team_display,
+
+                            })}
+
+                        </div>
+                    );
+                } else {
+                    return React.cloneElement(child, {
+                        onChange: (event) =>
+                            originalOnChange(region, event, index + 1, round, matchup)
+                    });
+                }
+
             }
 
             // FOR CHOOSING YOUR PICKS
             if (child.props.type === 'radio') {
-                let base = round === 'finals' ? bracket['finals'] : bracket[round][matchup];
-
-                let value =
-                    index === 0
-                        ? base['team1name']
-                        : base['team2name'];
 
                 if (child.props['data-role'] === 'admin_choose') {
 
@@ -120,6 +168,8 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
 
     return (
         <>
+            {isPlayerView ? <div className={styles.your_pick}><p>Your Pick:</p><p>{chosenTeam}</p><p>{correct}</p></div> : <></>}
+
             <div className={styles.blank_matchup}>
                 <ul className={styles.matchup}>
                     <li className={styles.team}>

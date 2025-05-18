@@ -6,7 +6,7 @@
 
     list-style: none;
 
-    min-width: 200px;
+    min-width: 254px;
     border-radius: 5px;
     border: 2px solid #f79ae7;
     background-color: #f79ae7;
@@ -15,6 +15,7 @@
     margin-bottom: 5px;
     margin-right: 10px;
     margin-left: 10px;
+
 
 }
 
@@ -29,6 +30,8 @@
 
     margin-left: -25px;
 
+
+
 }
 
 
@@ -42,6 +45,7 @@
     color: white;
 
     height: 33px;
+
 
 }
 
@@ -180,4 +184,42 @@
 
     top: 3px;
 
+}
+
+.team_display_container {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.team_display_container p {
+    margin: 0;
+    /* remove default vertical margin */
+}
+
+
+.team_display {
+    width: 83%;
+    border-radius: 6px;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.your_pick {
+    position: absolute;
+    background-color: red;
+    font-size: 10px;
+    width: 50px;
+    margin-left: 212px;
+
+    border-radius: 0 5px 5px 0;
+    padding-top: 10px;
+    height: 66px;
+    margin-top: 5px;
+    background-color: #f79ae7;
+    border-left: 2px solid white;
+}
+
+.your_pick p {
+    line-height: 0;
 }
