@@ -248,7 +248,6 @@ const CreateBracket = () => {
                             :
                             <div className={styles.bracket_placeholder}>
                                 <p className={styles.placeholder_label}>Waiting for user to create...</p>
-                                <img className={styles.loading_bar} src={savedBuild['Format'] === undefined ? loadingImages.empty : (savedBuild['Access'] !== undefined || (savedBuild['Format'] === 'print') ? (savedBuild['Title'] === undefined ? loadingImages.l2 : (savedBuild['Regions'] === undefined ? loadingImages.l3 : (savedBuild['Participants Per Region'] === undefined ? loadingImages.l4 : (savedBuild['Seeding'] !== undefined || savedBuild['Format'] === 'print' ? loadingImages.l6 : loadingImages.l5)))) : loadingImages.l1)} alt="Loading Bar" />
                             </div>
 
                     }

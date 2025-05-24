@@ -56,13 +56,13 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
             if (child.props.type === 'text') {
 
 
-                if (child.props['data-role'] === 'player_view') {
+                if (child.props['data-role'] === 'player_view' && fullBracket !== undefined) {
                     isPlayerView = true;
                     // NOTE: To Fix, bracket and play bracket have been swapped in the return code for GameView.jsx
                     // So, play bracket here is actually the bracket, and bracket is actually the play bracket
                     let temp_correct = "";
 
-                    if (region !== 'finals') {
+                    if (region != 'finals') {
                         chosenTeam = playBracket[region][round][matchup][`team${playBracket[region][round][matchup].teamselected}name`];
                         console.log()
                         if (fullBracket[region][round][matchup].teamselected === null) {
@@ -78,6 +78,7 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
                     if (temp_correct !== correct) {
                         setCorrect(temp_correct);
                     }
+
                     let playBase = round === 'finals' ? fullBracket['finals'] : fullBracket[region][round][matchup];
                     let play_value =
                         index === 0

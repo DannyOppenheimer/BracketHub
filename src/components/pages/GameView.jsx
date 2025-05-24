@@ -24,6 +24,8 @@ const GameView = () => {
     const [savedBuild, setSavedBuild] = useState(null);
     const [isHost, setIsHost] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const [numRegions, setNumRegions] = useState(0);
+    const [teamsPerRegion, setTeamsPerRegion] = useState(0);
 
     const auth = getAuth();
     const db = getFirestore(app);
@@ -37,12 +39,16 @@ const GameView = () => {
                 setIsHost(true);
             }
 
+            setNumRegions(gameSnap.data().numRegions);
+            setTeamsPerRegion(gameSnap.data().perRegion);
+
 
             if (gameSnap.data().playBracket === undefined) {
-                console.log(gameSnap.data().bracket)
                 await updateDoc(gameRef, {
                     playBracket: gameSnap.data().bracket
                 });
+                setPlayBracket(gameSnap.data().playBracket);
+
 
             } else {
                 setPlayBracket(gameSnap.data().playBracket);
@@ -422,7 +428,7 @@ const GameView = () => {
                     </div>
             }
 
-            <GamePlayerList currentUser={currentUser} isInPlay={new Date() > new Date(savedBuild.Deadline)} playerBrackets={playerBrackets} />
+            <GamePlayerList currentUser={currentUser} isInPlay={new Date() > new Date(savedBuild.Deadline)} playBracket={playBracket} playerBrackets={playerBrackets} numRegions={numRegions} numRounds={Math.ceil(Math.log2(teamsPerRegion))} />
         </>
 
     );
