@@ -1,3 +1,10 @@
+.container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 700px;
+}
+
 .title {
     margin-top: 4vh;
     margin-left: -20px;
@@ -54,4 +61,14 @@
     text-decoration: none;
 
     transform: scale(0.96) !important;
+}
+
+.dino_pic {
+    position: absolute;
+    width: 450px;
+    right: -150px;
+    transform: rotate(-20deg);
+
+
+    overflow: hidden;
 }

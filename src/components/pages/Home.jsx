@@ -19,6 +19,9 @@ const Home = () => {
                 <button className={styles.sign_up_button} onClick={() => handleButton('/signin')}>Sign In</button>
                 <button className={styles.sign_up_button} onClick={() => handleButton('/signup')}>Sign up</button>
             </div>
+            <div>
+                <img className={styles.dino_pic} src="/dino.png" alt="Dino" />
+            </div>
         </div>
     )
 }

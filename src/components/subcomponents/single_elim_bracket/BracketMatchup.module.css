@@ -220,6 +220,10 @@
     border-left: 2px solid white;
 }
 
+.finals_your_pick {
+    margin-top: 0 !important;
+}
+
 .your_pick p {
     line-height: 0;
 }

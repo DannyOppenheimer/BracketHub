@@ -31,17 +31,6 @@ const CreateBracket = () => {
 
     const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(false);
 
-    const loadingImages = {
-        empty: "/loading/empty.png",
-        l1: "/loading/loading1.png",
-        l2: "/loading/loading2.png",
-        l3: "/loading/loading3.png",
-        l4: "/loading/loading4.png",
-        l5: "/loading/loading5.png",
-        l6: "/loading/loading6.png",
-        l7: "/loading/loading7.png",
-
-    };
 
     const navigate = useNavigate();
 
@@ -153,6 +142,9 @@ const CreateBracket = () => {
                                     if (e.target.value > 4 && e.target.value !== '') {
                                         e.target.value = 4;
                                     }
+                                    if (e.target.value == 3 && e.target.value !== '') {
+                                        e.target.value = 4;
+                                    }
                                     setSavedBuild({ ...savedBuild, 'Regions': e.target.value });
                                 }
                                 } />
@@ -262,6 +254,7 @@ const CreateBracket = () => {
                 }
 
             </div>
+
         </>
     )
 }

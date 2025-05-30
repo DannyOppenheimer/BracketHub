@@ -47,7 +47,7 @@ const GameView = () => {
                 await updateDoc(gameRef, {
                     playBracket: gameSnap.data().bracket
                 });
-                setPlayBracket(gameSnap.data().playBracket);
+                setPlayBracket(gameSnap.data().bracket);
 
 
             } else {
@@ -78,7 +78,6 @@ const GameView = () => {
                     };
                 })
             );
-
 
             setPlayerBrackets(playerBracketsData);
         }
@@ -347,8 +346,12 @@ const GameView = () => {
     }
 
 
-    if (loading || playBracket === null || playBracket === undefined) {
+    if (loading) {
         return <p className={styles.loading}>Loading...</p>;
+    }
+
+    if (playBracket === null || playBracket === undefined) {
+        return <p className={styles.loading}>Loading Tournament Bracket...</p>;
     }
 
     return (
