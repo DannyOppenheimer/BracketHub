@@ -56,21 +56,23 @@ const GameView = () => {
 
 
             const bracketsRef = collection(db, "ActiveGames", gameID, "brackets");
-
             const bracketsSnap = await getDocs(bracketsRef);
 
+            const playersRef = collection(db, "Users")
             const playerBracketsData = await Promise.all(
                 bracketsSnap.docs.map(async (docSnap) => {
                     const bracketData = docSnap.data();
-                    const cur_uid = docSnap.id; // Each document ID is the player UID
-                    const userRef = doc(db, "Users", uid);
-                    const userSnap = await getDoc(userRef);
-                    const displayName = userSnap.exists() ? (userSnap.data().displayName || "Unknown Player") : "Unknown Player";
+                    const cur_uid = docSnap.id;
 
-
+                    // Fetch user displayName using cur_uid
+                    const userDocSnap = await getDoc(doc(playersRef, cur_uid));
+                    const displayName = userDocSnap.exists()
+                        ? userDocSnap.data().displayName || 'Unknown Player'
+                        : 'Unknown Player';
                     if (cur_uid === uid) {
                         setBracket(Object.values(bracketData)[0]);
                     }
+
                     return {
                         cur_uid,
                         displayName,
@@ -93,7 +95,7 @@ const GameView = () => {
         });
 
         return () => unsubscribe();
-    }, [auth]);
+    }, [auth, db, gameID]);
 
     useEffect(() => {
         const fetchGamePlayers = async () => {
@@ -219,14 +221,13 @@ const GameView = () => {
         }
 
         if (round === '1') {
-            console.log("HERE!!")
-            if (savedBuild['Regions'] == 2) {
+            if (Number(savedBuild.Regions) === 2) {
 
                 newBracket = updateBracket(newBracket, 'finals', "FINALS", null, `team${region === 1 ? 1 : 2}`, bracket[region][round][matchup][`team${team}`]);
                 newBracket = updateBracket(newBracket, 'finals', "FINALS", null, `team${region === 1 ? 1 : 2}name`, bracket[region][round][matchup][`team${team}name`]);
             }
 
-            if (savedBuild['Regions'] == 4) {
+            if (Number(savedBuild.Regions) === 4) {
                 const side = (region === 1 || region === 3) ? 'left' : 'right';
                 const teamIndex = (region === 1 || region === 2) ? 1 : 2;
 
@@ -235,32 +236,32 @@ const GameView = () => {
             }
         }
 
-        if (region === 'semis' && savedBuild['Regions'] === 4) {
+
+        if (region === 'semis' && Number(savedBuild.Regions) === 4) {
             const teamIndex = matchup === 'left' ? 1 : 2;
             newBracket = updateBracket(newBracket, 'finals', "FINALS", null, `team${teamIndex}`, bracket[region][matchup][`team${team}`]);
             newBracket = updateBracket(newBracket, 'finals', "FINALS", null, `team${teamIndex}name`, bracket[region][matchup][`team${team}name`]);
         }
 
         // ✅ Now apply all changes to state at once
-        console.log("Updated bracket:", newBracket);
         setBracket(newBracket);
     };
 
     const updatePlayBracket = (bracket, region, round, matchup, key, value) => {
         const copyBracket = JSON.parse(JSON.stringify(bracket));
 
-        if (round == "FINALS") {
+        if (round === "FINALS") {
             copyBracket[region][key] = value;
         }
-        else if (matchup == 'SEMIS') {
+        else if (matchup === 'SEMIS') {
             copyBracket[region][round][key] = value;
         }
-        else if (value == "SEARCH_AND_DELETE") {
+        else if (value === "SEARCH_AND_DELETE") {
 
-            if (copyBracket[region][round][matchup]['team1name'] == key) {
+            if (copyBracket[region][round][matchup]['team1name'] === key) {
                 copyBracket[region][round][matchup]['team1name'] = null;
                 copyBracket[region][round][matchup]['team1'] = null;
-            } else if (copyBracket[region][round][matchup]['team2name'] == key) {
+            } else if (copyBracket[region][round][matchup]['team2name'] === key) {
                 copyBracket[region][round][matchup]['team2name'] = null;
                 copyBracket[region][round][matchup]['team2'] = null;
             }
@@ -275,9 +276,9 @@ const GameView = () => {
     const recieveAdminPicks = async (region, event, teamName, team, round, matchup, numRounds) => {
         let newBracket = JSON.parse(JSON.stringify(playBracket)); // start from current
 
-        if (region == 'finals') {
+        if (region === 'finals') {
             newBracket = updatePlayBracket(newBracket, 'finals', "FINALS", null, `teamselected`, team);
-        } else if (region == 'semis') {
+        } else if (region === 'semis') {
             newBracket = updatePlayBracket(newBracket, 'semis', matchup, 'SEMIS', `teamselected`, team);
         } else {
             newBracket = updatePlayBracket(newBracket, region, round, matchup, 'teamselected', team);
@@ -298,23 +299,23 @@ const GameView = () => {
             count++;
         }
 
-        if (round == '1') {
-            if (savedBuild['Regions'] == 2) {
+        if (round === '1') {
+            if (Number(savedBuild.Regions) === 2) {
                 newBracket = updatePlayBracket(newBracket, 'finals', "FINALS", null, `team${region === 1 ? 1 : 2}`, playBracket[region][round][matchup][`team${team}`]);
                 newBracket = updatePlayBracket(newBracket, 'finals', "FINALS", null, `team${region === 1 ? 1 : 2}name`, playBracket[region][round][matchup][`team${team}name`]);
             }
 
-            if (savedBuild['Regions'] == 4) {
-                const side = region == 1 || region == 3 ? 'left' : 'right';
-                const teamIndex = (region == 1 || region == 2) ? 1 : 2;
+            if (Number(savedBuild.Regions) === 4) {
+                const side = region === 1 || region === 3 ? 'left' : 'right';
+                const teamIndex = (region === 1 || region === 2) ? 1 : 2;
 
                 newBracket = updatePlayBracket(newBracket, 'semis', side, 'SEMIS', `team${teamIndex}`, playBracket[region][round][matchup][`team${team}`]);
                 newBracket = updatePlayBracket(newBracket, 'semis', side, 'SEMIS', `team${teamIndex}name`, playBracket[region][round][matchup][`team${team}name`]);
             }
         }
 
-        if (region == 'semis' && savedBuild['Regions'] == 4) {
-            const teamIndex = matchup == 'left' ? 1 : 2;
+        if (region === 'semis' && Number(savedBuild.Regions) === 4) {
+            const teamIndex = matchup === 'left' ? 1 : 2;
             newBracket = updatePlayBracket(newBracket, 'finals', "FINALS", null, `team${teamIndex}`, playBracket[region][matchup][`team${team}`]);
             newBracket = updatePlayBracket(newBracket, 'finals', "FINALS", null, `team${teamIndex}name`, playBracket[region][matchup][`team${team}name`]);
         }

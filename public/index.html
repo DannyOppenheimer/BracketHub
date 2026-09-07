@@ -2,6 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // Keep Firebase's default Hosting URLs from becoming public-facing URLs.
+      // This runs before React loads and preserves the path, query, and fragment.
+      (function redirectFirebaseHostingDomain() {
+        var firebaseHostingDomains = [
+          "bracketplexus-b30b9.web.app",
+          "bracketplexus-b30b9.firebaseapp.com",
+        ];
+
+        if (firebaseHostingDomains.indexOf(window.location.hostname) !== -1) {
+          var canonicalUrl = new URL(window.location.href);
+          canonicalUrl.protocol = "https:";
+          canonicalUrl.hostname = "brackethub.club";
+          canonicalUrl.port = "";
+          window.location.replace(canonicalUrl.toString());
+        }
+      })();
+    </script>
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />

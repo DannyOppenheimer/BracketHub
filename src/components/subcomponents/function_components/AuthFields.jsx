@@ -4,8 +4,6 @@ import styles from './AuthFields.module.css';
 import PropTypes from 'prop-types';
 import '../FirebaseConfig';
 
-import { Navigate, useNavigate } from 'react-router-dom';
-
 import { app } from '../FirebaseConfig';
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signInWithPopup } from 'firebase/auth';
@@ -17,8 +15,6 @@ const AuthFields = ({ title }) => {
     const [currentUser, setCurrentUser] = useState(null);  // Tracks user state
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const navigate = useNavigate();
-
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
     auth.useDeviceLanguage();

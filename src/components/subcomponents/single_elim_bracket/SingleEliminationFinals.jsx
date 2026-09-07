@@ -1,18 +1,41 @@
 import React from 'react';
-import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
-import BracketMatchup_BLANK from './BracketMatchup_BLANK';
+import PropTypes from 'prop-types';
+import BracketMatchupInactive from './BracketMatchup_INACTIVE';
+import BracketMatchupBlank from './BracketMatchup_BLANK';
 
 
 const SingleEliminationFinals = ({ buildData, bracket, children, playBracket }) => {
+    const finals = bracket?.finals ?? null;
+    const seedingOn = buildData?.Seeding === 'on' || buildData?.Seeding === true;
+
+    if (!finals || (finals.team1name == null && finals.team2name == null)) {
+        return <BracketMatchupInactive />;
+    }
 
     return (
-        <>
-            {bracket['finals'].team1name === null && bracket['finals'].team2name === null ? <BracketMatchup_INACTIVE /> : <BracketMatchup_BLANK seedingOn={buildData['Seeding']} seed1={bracket['finals'].team1} seed2={bracket['finals'].team2} region={'finals'} round={'finals'} matchup={1} bracket={bracket} fullBracket={bracket} playBracket={playBracket} buildData={buildData}>{children}</BracketMatchup_BLANK>}
-
-        </>
+        <BracketMatchupBlank
+            seedingOn={seedingOn}
+            seed1={finals.team1 ?? null}
+            seed2={finals.team2 ?? null}
+            region="finals"
+            round="finals"
+            matchup={1}
+            bracket={bracket}
+            fullBracket={bracket}
+            playBracket={playBracket}
+            buildData={buildData}
+        >
+            {children}
+        </BracketMatchupBlank>
     );
-
 }
+
+SingleEliminationFinals.propTypes = {
+    buildData: PropTypes.object,
+    bracket: PropTypes.object,
+    playBracket: PropTypes.object,
+    children: PropTypes.node
+};
 
 
 export default SingleEliminationFinals

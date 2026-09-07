@@ -3,26 +3,16 @@ import styles from './BracketMatchup.module.css';
 import PropTypes from 'prop-types';
 import Popup from '../../subcomponents/function_components/Popup';
 
-import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc, fullBracket } from "firebase/firestore";
-import { app } from '../FirebaseConfig';
-
-
-const getBaseLog = (base, number) => {
-    return Math.log(number) / Math.log(base);
-};
-
-const db = getFirestore(app);
-
 
 const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round, matchup, bracket, buildData, gameID, fullBracket, playBracket }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupWinTeam, setPopupWinTeam] = useState('');
     const [popupLoseTeam, setPopupLoseTeam] = useState('');
     const [pendingAction, setPendingAction] = useState(null);
-    const [correct, setCorrect] = useState("");
 
     let chosenTeam = null;
     let isPlayerView = false;
+    let correct = '';
 
     const handleConfirm = () => {
         if (pendingAction) {
@@ -36,7 +26,7 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
         setShowPopup(false);
     };
 
-    const openPopup = async () => {
+    const openPopup = () => {
         setShowPopup(true);
     };
 
@@ -44,7 +34,15 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
         if (React.isValidElement(child) && child.type === 'input') {
             const originalOnChange = child.props.onChange;
 
-            let base = round === 'finals' ? bracket['finals'] : bracket[round][matchup];
+            let base = round === 'finals' ?
+                bracket?.finals
+                :
+                round === 'semis' ?
+                    bracket?.semis?.[matchup]
+                    :
+                    bracket?.[round]?.[matchup];
+
+            if (!base) return child;
 
             let value =
                 index === 0
@@ -58,40 +56,37 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
                 if (child.props['data-role'] === 'player_view') {
 
                     isPlayerView = true;
-                    // NOTE: To Fix, bracket and play bracket have been swapped in the return code for GameView.jsx
-                    // So, play bracket here is actually the bracket, and bracket is actually the play bracket
-                    let temp_correct = "";
+                    const pickedMatchup = region === 'finals'
+                        ? playBracket?.finals
+                        : region === 'semis'
+                            ? playBracket?.semis?.[matchup]
+                            : playBracket?.[region]?.[round]?.[matchup];
+                    const resultMatchup = region === 'finals'
+                        ? fullBracket?.finals
+                        : region === 'semis'
+                            ? fullBracket?.semis?.[matchup]
+                            : fullBracket?.[region]?.[round]?.[matchup];
 
-                    if (region != 'finals') {
-                        chosenTeam = playBracket[region][round][matchup][`team${playBracket[region][round][matchup].teamselected}name`];
+                    const pickedTeam = pickedMatchup?.teamselected;
+                    const resultTeam = resultMatchup?.teamselected;
+                    chosenTeam = pickedTeam == null
+                        ? 'No pick'
+                        : pickedMatchup?.[`team${pickedTeam}name`] ?? 'Unknown team';
 
-                        if (fullBracket[region][round][matchup].teamselected === null) {
-                            temp_correct = "❔";
-                        }
-                        else if (fullBracket[region][round][matchup][`team${fullBracket[region][round][matchup].teamselected}`] === playBracket[region][round][matchup][`team${playBracket[region][round][matchup].teamselected}`]) {
-                            temp_correct = "✔️";
-                        } else {
-                            temp_correct = "✖️";
-                        }
-
+                    if (resultTeam == null) {
+                        correct = '❔';
+                    } else if (pickedTeam == null) {
+                        correct = '✖️';
                     } else {
-                        chosenTeam = playBracket['finals'][`team${playBracket['finals'].teamselected}name`];
-
-                        if (fullBracket['finals'].teamselected === null) {
-                            temp_correct = "❔";
-                        }
-                        else if (fullBracket['finals'][`team${fullBracket['finals'].teamselected}`] === playBracket['finals'][`team${playBracket['finals'].teamselected}`]) {
-                            temp_correct = "✔️";
-                        } else {
-                            temp_correct = "✖️";
-                        }
-
-                    }
-                    if (temp_correct !== correct) {
-                        setCorrect(temp_correct);
+                        const pickedTeamID = pickedMatchup?.[`team${pickedTeam}`];
+                        const resultTeamID = resultMatchup?.[`team${resultTeam}`];
+                        correct = pickedTeamID === resultTeamID ? '✔️' : '✖️';
                     }
 
-                    let playBase = round === 'finals' ? fullBracket['finals'] : fullBracket[region][round][matchup];
+                    const playBase = resultMatchup;
+
+                    if (!playBase) return child;
+
                     let play_value =
                         index === 0
                             ? playBase['team1name']
@@ -182,7 +177,7 @@ const BracketMatchup_BLANK = ({ seedingOn, seed1, seed2, children, region, round
 
     return (
         <>
-            {isPlayerView ? <div className={round === 'finals' ? [styles.finals_your_pick, styles.your_pick].join(' ') : styles.your_pick}><p>Your Pick:</p><p>{chosenTeam}</p><p>{correct}</p></div> : <></>}
+            {isPlayerView ? <div className={[round === 'finals' ? styles.finals_your_pick : "", (correct === '✖️' ? styles.pick_wrong : ""), (correct === '✔️' ? styles.pick_correct : ""), styles.your_pick].join(' ')}><p>Your Pick:</p><p>{chosenTeam}</p><p>{correct}</p></div> : <></>}
 
             <div className={styles.blank_matchup}>
                 <ul className={styles.matchup}>
@@ -238,8 +233,15 @@ BracketMatchup_BLANK.propTypes = {
     seedingOn: PropTypes.bool,
     seed1: PropTypes.number,
     seed2: PropTypes.number,
-    oneTeam: PropTypes.bool,
-    returnTeams: PropTypes.func
+    children: PropTypes.node,
+    region: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    round: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    matchup: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    bracket: PropTypes.object,
+    buildData: PropTypes.object,
+    gameID: PropTypes.string,
+    fullBracket: PropTypes.object,
+    playBracket: PropTypes.object
 }
 
 export default BracketMatchup_BLANK

@@ -1,0 +1,134 @@
+.container {
+    width: 80%;
+    margin: 5vh auto;
+
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-right: 1vw;
+    padding-left: 1vw;
+
+    border: 3px solid lightgray;
+    box-shadow: 5px 5px 5px lightgray;
+    overflow-x: auto;
+}
+
+/* Title */
+.title {
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    color: black;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tableHeader th {
+    background-color: #e23cc6;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Raleway', sans-serif;
+}
+
+.cell {
+    padding: 0.8rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Button */
+.button {
+    color: black;
+    padding: 2px 7px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    font-family: 'Raleway', sans-serif;
+
+    background-color: #e23cc6;
+    border: solid black;
+    box-shadow: 3px 3px #888888;
+
+    border-radius: 4px;
+    min-width: 190px;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    transform: scale(1.02);
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.button:disabled {
+    cursor: default;
+    opacity: 0.65;
+    transform: none;
+}
+
+/* Fallback text when not signed in */
+.notSignedIn {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+    font-style: italic;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* No Games Message */
+.noGames {
+    text-align: center;
+    padding: 1rem;
+    color: #777;
+    font-style: italic;
+    font-family: 'Raleway', sans-serif;
+}
+
+.error {
+    text-align: center;
+    padding: 1rem;
+    color: #a40000;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .tableHeader th,
+    .cell {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .table {
+        min-width: 650px;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

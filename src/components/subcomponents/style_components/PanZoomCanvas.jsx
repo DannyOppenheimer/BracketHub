@@ -18,9 +18,9 @@ export default function PanZoomCanvas({ type, children }) {
 
             let newHeight = 0
             // Set the height dynamically based on content size
-            if (type == 'pick') {
+            if (type === 'pick') {
                 newHeight = Math.max(200, Math.min(content.height + 50, 600)); // Min: 200px, Max: 80vh
-            } else if (type == 'create') {
+            } else if (type === 'create') {
                 newHeight = 800 // Min: 200px, Max: 80vh
             }
 
@@ -40,7 +40,7 @@ export default function PanZoomCanvas({ type, children }) {
         return () => {
             window.removeEventListener("resize", adjustHeightAndAlignTopLeft);
         };
-    }, []); // Runs only on mount, no longer depends on children
+    }, [initialized, type]);
 
     useEffect(() => {
         const handleWheel = (event) => {

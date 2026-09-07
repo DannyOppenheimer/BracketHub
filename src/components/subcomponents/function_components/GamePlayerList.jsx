@@ -1,6 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import styles from './GamePlayerList.module.css';
 
+export const getScoreIndex = (numRegions, roundNumber) => (
+    numRegions === 4 ? roundNumber - 1 : roundNumber
+);
+
+export const getRoundMultiplier = (numRegions, numRounds, roundNumber) => {
+    if (numRegions === 1) {
+        return 2 ** (numRounds - roundNumber - 1);
+    }
+
+    const regionalMultiplier = 2 ** (numRounds - roundNumber);
+    return numRegions === 4 ? 2 * regionalMultiplier : regionalMultiplier;
+};
+
+export const calculatePlayerScores = (playerBrackets, playBracket, numRounds, numRegions) => {
+    if (!Array.isArray(playerBrackets) || !playBracket || ![1, 2, 4].includes(numRegions)) {
+        return {};
+    }
+
+    const scores = {};
+
+    playerBrackets.forEach(playerEntry => {
+        const playerID = playerEntry.cur_uid;
+        const playerBracket = playerEntry.bracket?.bracket ?? {};
+
+        if (!playerID) return;
+        scores[playerID] = {};
+
+        for (let round = 1; round <= numRounds; round++) {
+            let correctPicks = 0;
+            const matchupCount = (2 ** round) / 2;
+
+            for (let region = 1; region <= numRegions; region++) {
+                for (let matchup = 1; matchup <= matchupCount; matchup++) {
+                    const playerPick = playerBracket?.[region]?.[round]?.[matchup]?.teamselected;
+                    const actualPick = playBracket?.[region]?.[round]?.[matchup]?.teamselected;
+
+                    if (actualPick != null && playerPick === actualPick) {
+                        correctPicks += 1;
+                    }
+                }
+            }
+
+            const scoreIndex = numRegions === 1 ? round - 1 : round;
+            scores[playerID][scoreIndex] = { score: correctPicks };
+        }
+
+        if (numRegions >= 2) {
+            const actualFinal = playBracket?.finals?.teamselected;
+            const playerFinal = playerBracket?.finals?.teamselected;
+            scores[playerID][numRegions === 4 ? -1 : 0] = {
+                score: actualFinal != null && playerFinal === actualFinal ? 1 : 0
+            };
+        }
+
+        if (numRegions === 4) {
+            const semifinalSides = ['left', 'right'];
+            const semifinalScore = semifinalSides.reduce((total, side) => {
+                const actualPick = playBracket?.semis?.[side]?.teamselected;
+                const playerPick = playerBracket?.semis?.[side]?.teamselected;
+                return total + (actualPick != null && playerPick === actualPick ? 1 : 0);
+            }, 0);
+
+            scores[playerID][0] = { score: semifinalScore };
+        }
+    });
+
+    return scores;
+};
+
 const GamePlayersTable = ({
     currentUser,
     isInPlay,
@@ -15,7 +84,7 @@ const GamePlayersTable = ({
 
     const getVisibleRounds = () => {
         const visibleRounds = [];
-        const regionalRounds = baseRounds.slice(baseRounds.length - numRounds - (numRegions == 1 ? 0 : 1));
+        const regionalRounds = baseRounds.slice(baseRounds.length - numRounds - (numRegions === 1 ? 0 : 1) - (numRegions === 4 ? 1 : 0));
         visibleRounds.push(...regionalRounds);
 
         return visibleRounds;
@@ -23,88 +92,11 @@ const GamePlayersTable = ({
 
     const visibleRounds = getVisibleRounds();
 
-    const calcScores = () => {
-        const left = playBracket[1];
-        if (numRegions == 2) {
-
-            const right = playBracket[2];
-            const newScores = {};
-
-            for (let playerBracket of playerBrackets) {
-                const playerID = playerBracket.cur_uid;
-                const playerLeft = playerBracket.bracket.bracket[1];
-                const playerRight = playerBracket.bracket.bracket[2];
-                newScores[playerID] = {};
-
-                for (let i = 1; i <= numRounds; i++) {
-                    let score = 0;
-
-                    for (let j = 1; j <= (2 ** i) / 2; j++) {
-                        const playerLeftPick = playerLeft?.[i]?.[j]?.teamselected;
-                        const actualLeftPick = left?.[i]?.[j]?.teamselected;
-
-                        const playerRightPick = playerRight?.[i]?.[j]?.teamselected;
-                        const actualRightPick = right?.[i]?.[j]?.teamselected;
-
-                        if (playerLeftPick != null && actualLeftPick != null && playerLeftPick === actualLeftPick) {
-                            score += 1;
-                        }
-
-                        if (playerRightPick != null && actualRightPick != null && playerRightPick === actualRightPick) {
-                            score += 1;
-                        }
-                    }
-
-                    newScores[playerID][i] = { score };
-                }
-
-                const correctFinal = playBracket?.['finals']?.teamselected;
-                const playerFinal = playerBracket.bracket?.bracket?.['finals']?.teamselected;
-
-                newScores[playerID][0] = {
-                    score: correctFinal === playerFinal ? 1 : 0,
-                };
-            }
-
-            setPlayerScores(newScores);
-        } else if (numRegions == 1) {
-            const newScores = {};
-            for (let playerBracket of playerBrackets) {
-                const playerID = playerBracket.cur_uid;
-                const playerLeft = playerBracket.bracket.bracket[1];
-                newScores[playerID] = {};
-
-                for (let i = 1; i <= numRounds; i++) {
-                    let score = 0;
-
-                    for (let j = 1; j <= (2 ** i) / 2; j++) {
-                        const playerLeftPick = playerLeft?.[i]?.[j]?.teamselected;
-                        const actualLeftPick = left?.[i]?.[j]?.teamselected;
-
-                        if (playerLeftPick != null && actualLeftPick != null && playerLeftPick === actualLeftPick) {
-                            score += 1;
-                        }
-                    }
-
-                    newScores[playerID][i - 1] = { score };
-                }
-
-            }
-            setPlayerScores(newScores);
-        }
-
-    };
-
-
     useEffect(() => {
         if (playerBrackets && playBracket && numRounds && numRegions) {
-            calcScores();
+            setPlayerScores(calculatePlayerScores(playerBrackets, playBracket, numRounds, numRegions));
         }
     }, [playerBrackets, playBracket, numRounds, numRegions]);
-
-    useEffect(() => {
-        // console.log(playerScores)
-    }, [playerScores]);
 
     return (
         <div className={styles.container}>
@@ -128,13 +120,17 @@ const GamePlayersTable = ({
                                 const playerID = player.cur_uid;
 
                                 return (
-                                    <tr key={player.uid} className={styles.tableRow}>
+                                    <tr key={player.cur_uid} className={styles.tableRow}>
                                         <td className={styles.cell}>{index + 1}</td>
                                         <td className={styles.cell}>{player.displayName}</td>
                                         {isInPlay &&
                                             visibleRounds.map((round, rIndex) => {
                                                 let roundNumber = visibleRounds.length - rIndex - 1;
-                                                const score = numRegions == 1 ? ((2 ** (numRounds - roundNumber - 1)) * playerScores?.[playerID]?.[roundNumber]?.score ?? '—') : ((2 ** (numRounds - roundNumber)) * playerScores?.[playerID]?.[roundNumber]?.score ?? '—');
+                                                const scoreIndex = getScoreIndex(numRegions, roundNumber);
+                                                const rawScore = playerScores?.[playerID]?.[scoreIndex]?.score;
+                                                const score = rawScore == null
+                                                    ? '—'
+                                                    : getRoundMultiplier(numRegions, numRounds, roundNumber) * rawScore;
 
 
                                                 return (
@@ -148,8 +144,9 @@ const GamePlayersTable = ({
                                                 {
                                                     visibleRounds.reduce((total, _, rIndex) => {
                                                         const roundNumber = visibleRounds.length - rIndex - 1;
-                                                        const roundScore = playerScores?.[playerID]?.[roundNumber]?.score ?? 0;
-                                                        return total + (numRegions == 1 ? (2 ** (numRounds - roundNumber - 1)) * roundScore : (2 ** (numRounds - roundNumber)) * roundScore);
+                                                        const scoreIndex = getScoreIndex(numRegions, roundNumber);
+                                                        const roundScore = playerScores?.[playerID]?.[scoreIndex]?.score ?? 0;
+                                                        return total + getRoundMultiplier(numRegions, numRounds, roundNumber) * roundScore;
                                                     }, 0)
                                                 }
                                             </td>

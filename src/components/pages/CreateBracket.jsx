@@ -3,7 +3,6 @@ import StyleButton from '../subcomponents/style_components/StyleButton';
 import { app } from '../subcomponents/FirebaseConfig';
 import styles from './CreateBracket.module.css';
 import CreateSingleEliminationBracket from '../subcomponents/bracket_types/CreateSingleEliminationBracket.jsx';
-import SingleEliminationBracket from '../subcomponents/single_elim_bracket/SingleEliminationBracket';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavLink } from "react-router-dom";
@@ -142,7 +141,7 @@ const CreateBracket = () => {
                                     if (e.target.value > 4 && e.target.value !== '') {
                                         e.target.value = 4;
                                     }
-                                    if (e.target.value == 3 && e.target.value !== '') {
+                                    if (e.target.value === '3') {
                                         e.target.value = 4;
                                     }
                                     setSavedBuild({ ...savedBuild, 'Regions': e.target.value });

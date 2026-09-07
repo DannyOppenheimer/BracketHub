@@ -1,32 +1,37 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './SingleEliminationBracketRegion.module.css';
-import BracketMatchup_BLANK from './BracketMatchup_BLANK';
-import BracketMatchup_INACTIVE from './BracketMatchup_INACTIVE';
+import BracketMatchupBlank from './BracketMatchup_BLANK';
+import BracketMatchupInactive from './BracketMatchup_INACTIVE';
 
 const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, children, gameID, fullBracket, playBracket }) => {
-
+    const regionBracket = bracket && typeof bracket === 'object' ? bracket : {};
 
     // easy to access user preference
-    const seedingOn = buildData['Seeding'] === 'on';
+    const seedingOn = buildData?.Seeding === 'on' || buildData?.Seeding === true;
 
-    const forwardBracket = Object.keys(bracket);
-    const reverseBracket = Object.keys(bracket).reverse();
+    const forwardBracket = Object.keys(regionBracket);
+    const reverseBracket = forwardBracket.slice().reverse();
     return (
         <div className={styles.zoom_pane}>
             <div className={styles.container}>
                 {
-                    (regionNum % 2 == 0 ? reverseBracket : forwardBracket).map((round, i) => {
+                    (regionNum % 2 === 0 ? reverseBracket : forwardBracket).map((round, i) => {
+                        const roundMatchups = regionBracket[round] && typeof regionBracket[round] === 'object'
+                            ? regionBracket[round]
+                            : {};
                         return (
                             // Key set to round and the increment
                             <div key={`${round}_${i}`} className={styles.column}>
                                 {
-                                    Object.keys(bracket[round]).map((matchup, j) => {
+                                    Object.keys(roundMatchups).map((matchup, j) => {
+                                        const matchupData = roundMatchups[matchup] ?? {};
 
                                         return (
                                             <div key={`inline_connector_${j}`} className={styles.inlineConnecter}>
 
                                                 {
-                                                    regionNum % 2 == 0 ?
+                                                    regionNum % 2 === 0 ?
                                                         round !== '1'
                                                             ?
                                                             <div key={`connector_${j}`} className={styles.connector}>
@@ -41,18 +46,18 @@ const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, childre
 
                                                 <div key={`cell_${j}`} className={styles.cell}>
                                                     {
-                                                        bracket[round][matchup].team1 === null && bracket[round][matchup].team2 === null
+                                                        matchupData.team1name == null && matchupData.team2name == null
                                                             ?
-                                                            <BracketMatchup_INACTIVE key={`inactive_cell_${j}`} />
+                                                            <BracketMatchupInactive key={`inactive_cell_${j}`} />
                                                             :
-                                                            <BracketMatchup_BLANK key={`cell_${bracket[round][matchup].team1}_${bracket[round][matchup].team2}`} seedingOn={seedingOn} seed1={bracket[round][matchup].team1} seed2={bracket[round][matchup].team2} region={regionNum} round={round} matchup={matchup} bracket={bracket} buildData={buildData} gameID={gameID} fullBracket={fullBracket} playBracket={playBracket}>
+                                                            <BracketMatchupBlank key={`cell_${round}_${matchup}`} seedingOn={seedingOn} seed1={matchupData.team1 ?? null} seed2={matchupData.team2 ?? null} region={regionNum} round={round} matchup={matchup} bracket={regionBracket} buildData={buildData} gameID={gameID} fullBracket={fullBracket} playBracket={playBracket}>
                                                                 {children}
-                                                            </BracketMatchup_BLANK>
+                                                            </BracketMatchupBlank>
                                                     }
                                                 </div>
 
                                                 {
-                                                    regionNum % 2 != 0 ?
+                                                    regionNum % 2 !== 0 ?
                                                         round !== '1'
                                                             ?
                                                             <div key={`connector_${j}`} className={styles.connector}>
@@ -81,5 +86,15 @@ const SingleEliminationBracketRegion = ({ regionNum, buildData, bracket, childre
 
     )
 }
+
+SingleEliminationBracketRegion.propTypes = {
+    regionNum: PropTypes.number.isRequired,
+    buildData: PropTypes.object,
+    bracket: PropTypes.object,
+    children: PropTypes.node,
+    gameID: PropTypes.string,
+    fullBracket: PropTypes.object,
+    playBracket: PropTypes.object
+};
 
 export default SingleEliminationBracketRegion

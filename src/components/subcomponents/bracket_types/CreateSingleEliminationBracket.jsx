@@ -1,7 +1,5 @@
-import React, { useEffect, createContext, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import matchupStyles from '../single_elim_bracket/BracketMatchup.module.css';
-
-import PropTypes from 'prop-types';
 
 import SingleEliminationBracket from '../single_elim_bracket/SingleEliminationBracket';
 
@@ -53,8 +51,6 @@ function lowestSeededTeamAndMatchup(round) {
 const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
 
 
-    // easy to access user preference
-    const seedingOn = buildData['Seeding'] === 'on' ? true : false;
     const numTeams = buildData['Participants Per Region'];
     const numRegions = buildData['Regions'];
     const numRounds = Math.ceil(getBaseLog(2, numTeams));
@@ -77,7 +73,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
     };
 
     // If only 1 team is present in a matchup, label it correctly
-    const setSoloTeam = (bracketObj, region, round, matchup) => {
+    const setSoloTeam = useCallback((bracketObj, region, round, matchup) => {
 
         if (bracketObj[region][round][matchup].team1 === null && bracketObj[region][round][matchup].team2 !== null) {
             bracketObj[region][round][matchup].soloTeam = true;
@@ -90,11 +86,11 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
         }
 
         return bracketObj;
-    }
+    }, []);
 
     // make sure that teams recieving a by-week are placed correctly between "team1" and "team2"
     // for example, when there are 6 teams, seed 1 would be on the top of the 2nd round, while seed 2 would be at the very bottom
-    const checkTeamTopBottom = (bracketObj) => {
+    const checkTeamTopBottom = useCallback((bracketObj) => {
 
         for (let h = 1; h <= numRegions; h++) {
             for (let i = 1; i <= numRounds; i++) {
@@ -114,7 +110,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
             }
         }
         return bracketObj;
-    }
+    }, [numRegions, numRounds]);
 
     // Initialize an empty bracket with settings at null or false.
     useEffect(() => {
@@ -194,7 +190,7 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
 
                 let nextUpSpot = Math.ceil(matchupNumberAtLoSeed / 2);
 
-                if (initialBracket[i][numRounds - 1][nextUpSpot].team1 == null) {
+                if (initialBracket[i][numRounds - 1][nextUpSpot].team1 === null) {
                     initialBracket[i][numRounds - 1][nextUpSpot].team1 = initialBracket[i][numRounds][matchupNumberAtLoSeed][teamAtHiSeed];
 
                 } else {
@@ -215,11 +211,11 @@ const CreateSingleEliminationBracket = ({ buildData, updateBracketFunc }) => {
 
 
 
-    }, [numRounds, numTeams])
+    }, [checkTeamTopBottom, numRegions, numRounds, numTeams, setSoloTeam, updateBracketFunc])
 
 
 
-    if (Object.keys(bracket).length == 0) {
+    if (Object.keys(bracket).length === 0) {
         return;
     }
 

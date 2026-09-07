@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './BracketMatchup.module.css';
-import PropTypes from 'prop-types';
 
 const BracketMatchup_INACTIVE = () => {
     return (

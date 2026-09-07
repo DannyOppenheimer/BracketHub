@@ -210,7 +210,7 @@
     background-color: red;
     font-size: 10px;
     width: 50px;
-    margin-left: 212px;
+    margin-left: 215px;
 
     border-radius: 0 5px 5px 0;
     padding-top: 10px;
@@ -226,4 +226,12 @@
 
 .your_pick p {
     line-height: 0;
+}
+
+.pick_wrong {
+    background-color: lightcoral;
+}
+
+.pick_correct {
+    background-color: rgb(70, 207, 70);
 }
